@@ -1,5 +1,5 @@
 {
-  "name": "json-refs",
+  "name": "path-loader",
   "version": "0.0.0",
   "description": "Utility that provides a single API for loading the content of a path/URL.",
   "main": "index.js",
@@ -12,7 +12,7 @@
     "url": "https://github.com/whitlockjc"
   },
   "bugs": {
-    "url": "https://github.com/whitlockjc/json-refs/issues"
+    "url": "https://github.com/whitlockjc/path-loader/issues"
   },
   "files": [
     "index.js",
@@ -21,11 +21,11 @@
     "lib/loaders/https.js",
     "LICENSE"
   ],
-  "homepage": "https://github.com/whitlockjc/json-refs",
+  "homepage": "https://github.com/whitlockjc/path-loader",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/whitlockjc/json-refs.git"
+    "url": "https://github.com/whitlockjc/path-loader.git"
   },
   "keywords": [
     "json"
