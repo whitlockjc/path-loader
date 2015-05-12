@@ -135,14 +135,10 @@ describe('path-loader (browser loaders)', function () {
   describe('https', function () {
     it('make sure we get a loader', function (done) {
       jsonLoader
-        .load('https://localhost:44445/project.json')
-        .then(function () {
-          throw new Error('jsonLoader.load should had failed');
-        }, function (err) {
-          // Since we did not setup a valid https server, just ensure we get the expected error back
-
-          // superagent doesn't handle an XHR request that returns 404 very well
-          assert.equal('Origin is not allowed by Access-Control-Allow-Origin', err.message);
+        .load('https://api.github.com/repos/whitlockjc/path-loader')
+        .then(JSON.parse)
+        .then(function (json) {
+          assert.equal('whitlockjc/path-loader', json.full_name);
         })
         .then(done, done);
     });

@@ -29,7 +29,6 @@
 var assert = require('assert');
 var helpers = require('./helpers');
 var http = require('http');
-var https = require('http');
 var path = require('path');
 var jsonLoader = require('..');
 var YAML = require('js-yaml');
@@ -200,26 +199,12 @@ describe('path-loader (node.js loaders)', function () {
 
   // Since http and https have the same implementation, no need to test them individually
   describe('https', function () {
-    var server;
-
-    before(function (done) {
-      server = helpers.createServer(https).listen(55555, function () {
-        done();
-      });
-    });
-
-    after(function (done) {
-      server.close(done);
-    });
-
     it('make sure we get a loader', function (done) {
       jsonLoader
-        .load('https://localhost:55555/project.json')
-        .then(function () {
-          throw new Error('jsonLoader.load should had failed');
-        }, function (err) {
-          // Since we did not setup a valid https server, just ensure we get the expected error back
-          assert.equal('ECONNRESET', err.code);
+        .load('https://api.github.com/repos/whitlockjc/path-loader')
+        .then(JSON.parse)
+        .then(function (json) {
+          assert.equal('whitlockjc/path-loader', json.full_name);
         })
         .then(done, done);
     });
