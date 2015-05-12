@@ -123,7 +123,7 @@ gulp.task('test-node', function (cb) {
 
 gulp.task('test-browser', ['browserify'], function (cb) {
   var basePath = './test/browser/';
-  var httpServer = testHelpers.createServer(require('http'));
+  var httpServer;
 
   function cleanUp () {
     // Clean up just in case
@@ -132,7 +132,9 @@ gulp.task('test-browser', ['browserify'], function (cb) {
       basePath + 'test-browser.js'
     ]);
 
-    httpServer.close();
+    if (httpServer) {
+      httpServer.close();
+    }
   }
 
   Promise.resolve()
@@ -163,7 +165,7 @@ gulp.task('test-browser', ['browserify'], function (cb) {
       });
     })
     .then(function () {
-      httpServer.listen(44444);
+      httpServer = testHelpers.createServer(require('http')).listen(44444);
     })
     .then(function () {
       return new Promise(function (resolve, reject) {
