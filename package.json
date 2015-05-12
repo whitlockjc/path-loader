@@ -16,9 +16,7 @@
   },
   "files": [
     "index.js",
-    "lib/loaders/file.js",
-    "lib/loaders/http.js",
-    "lib/loaders/https.js",
+    "lib/**/*.js",
     "LICENSE"
   ],
   "homepage": "https://github.com/whitlockjc/path-loader",

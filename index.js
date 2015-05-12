@@ -55,17 +55,6 @@ if (typeof Promise === 'undefined') {
  */
 
 /**
- * Callback used to process the retrieved content.
- *
- * @param {string} content - The content loaded from the file/URL
- * @param {string} location - The location retrieved
- *
- * @returns {object} The JavaScript object representation of the reference
- *
- * @callback processContentCallback
- */
-
-/**
  * Returns the loader for the given location.
  *
  * @param {string} location - The location to load
