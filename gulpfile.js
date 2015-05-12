@@ -124,7 +124,6 @@ gulp.task('test-node', function (cb) {
 gulp.task('test-browser', ['browserify'], function (cb) {
   var basePath = './test/browser/';
   var httpServer = testHelpers.createServer(require('http'));
-  var httpsServer = testHelpers.createServer(require('https'));
 
   function cleanUp () {
     // Clean up just in case
@@ -134,7 +133,6 @@ gulp.task('test-browser', ['browserify'], function (cb) {
     ]);
 
     httpServer.close();
-    httpsServer.close();
   }
 
   Promise.resolve()
@@ -166,7 +164,6 @@ gulp.task('test-browser', ['browserify'], function (cb) {
     })
     .then(function () {
       httpServer.listen(44444);
-      httpsServer.listen(44445);
     })
     .then(function () {
       return new Promise(function (resolve, reject) {
