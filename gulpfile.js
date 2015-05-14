@@ -29,12 +29,12 @@ var del = require('del');
 var eslint = require('gulp-eslint');
 var fs = require('fs');
 var gulp = require('gulp');
-var testHelpers = require('./test/helpers');
 var istanbul = require('gulp-istanbul');
 var mocha = require('gulp-mocha');
 var mochaPhantomJS = require('gulp-mocha-phantomjs');
 var runSequence = require('run-sequence');
 var source = require('vinyl-source-stream');
+var testHelpers = require('./test/helpers');
 
 var runningAllTests = false;
 
@@ -204,4 +204,4 @@ gulp.task('test', function (cb) {
   runSequence('test-node', 'test-browser', cb);
 });
 
-gulp.task('default', ['lint', 'test', 'browserify']);
+gulp.task('default', ['lint', 'browserify', 'test']);
