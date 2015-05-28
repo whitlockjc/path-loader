@@ -1,5 +1,7 @@
 # path-loader
 
+[![Join the chat at https://gitter.im/whitlockjc/path-loader](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/whitlockjc/path-loader?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Utility that provides a single API for loading the content of a path/URL.  This module works in the browser and in
 io.js/Node.js.  Right now this module supports the following loaders:
 
