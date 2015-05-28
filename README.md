@@ -1,7 +1,5 @@
 # path-loader
 
-[![Join the chat at https://gitter.im/whitlockjc/path-loader](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/whitlockjc/path-loader?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 Utility that provides a single API for loading the content of a path/URL.  This module works in the browser and in
 io.js/Node.js.  Right now this module supports the following loaders:
 
@@ -20,6 +18,7 @@ by the project but for now that is not an option.
 * Dependencies: [![Dependencies](https://david-dm.org/whitlockjc/path-loader.svg)](https://david-dm.org/whitlockjc/path-loader)
 * Developer dependencies: [![Dev Dependencies](https://david-dm.org/whitlockjc/path-loader/dev-status.svg)](https://david-dm.org/whitlockjc/path-loader#info=devDependencies&view=table)
 * Downloads: [![NPM Downloads Per Month](http://img.shields.io/npm/dm/path-loader.svg)](https://www.npmjs.org/package/path-loader)
+* Gitter: [![Join the chat at https://gitter.im/whitlockjc/path-loader](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/whitlockjc/path-loader?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 * License: [![License](http://img.shields.io/npm/l/path-loader.svg)](https://github.com/whitlockjc/path-loader/blob/master/LICENSE)
 * Version: [![NPM Version](http://img.shields.io/npm/v/path-loader.svg)](https://www.npmjs.org/package/path-loader)
 
