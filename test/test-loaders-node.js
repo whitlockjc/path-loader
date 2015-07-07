@@ -49,7 +49,17 @@ describe('path-loader (node.js loaders)', function () {
         .then(done, done);
     });
 
-    it('relative existing file', function (done) {
+    it('relative existing file (without dot)', function (done) {
+      jsonLoader
+        .load('test/browser/project.json')
+        .then(JSON.parse)
+        .then(function (json) {
+          assert.deepEqual(personJson, json);
+        })
+        .then(done, done);
+    });
+
+    it('relative existing file (with dot)', function (done) {
       jsonLoader
         .load('./test/browser/project.json')
         .then(JSON.parse)

@@ -60,6 +60,8 @@ describe('path-loader (browser loaders)', function () {
         .then(done, done);
     });
 
+    // We cannot test relative requests with the current test framework
+
     it('missing file', function (done) {
       jsonLoader
         .load('http://localhost:44444/missing.json')
