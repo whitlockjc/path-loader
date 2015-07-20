@@ -73,6 +73,62 @@ function getLoader (location) {
  * @param {resultCallback} done - The result callback
  *
  * @returns {Promise} Always returns a promise even if there is a callback provided
+ *
+ * @example
+ * // Example using callbacks
+ *
+ * PathLoader
+ *   .load('./package.json', function (err, document) {
+ *     if (err) {
+ *       console.error(err.stack);
+ *     } else {
+ *       try {
+ *         document = JSON.parse(document)
+ *         console.log(document.name + ' (' + document.version + '): ' + document.description);
+ *       } catch (err2) {
+ *         callback(err2);
+ *       }
+ *     });
+ *
+ * @example
+ * // Example using Promises
+ *
+ * PathLoader
+ *   .load('./package.json')
+ *   .then(JSON.parse)
+ *   .then(function (document) {
+ *     console.log(document.name + ' (' + document.version + '): ' + document.description);
+ *   }, function (err) {
+ *     console.error(err.stack);
+ *   });
+ *
+ * @example
+ * // Example using options.prepareRequest to provide authentication details for a remotely secure URL
+ *
+ * PathLoader
+ *   .load('https://api.github.com/repos/whitlockjc/path-loader', {
+ *     prepareRequest: function (req) {
+ *       req.auth('my-username', 'my-password')
+ *     }
+ *   })
+ *   .then(JSON.parse)
+ *   .then(function (document) {
+ *     console.log(document.full_name + ': ' + document.description);
+ *   }, function (err) {
+ *     console.error(err.stack);
+ *   });
+ *
+ * @example
+ * // Example using options.processContent to load a YAML file
+ *
+ * PathLoader
+ *   .load('/Users/not-you/projects/path-loader/.travis.yml')
+ *   .then(YAML.safeLoad)
+ *   .then(function (document) {
+ *     console.log('path-loader uses the', document.language, 'language.');
+ *   }, function (err) {
+ *     console.error(err.stack);
+ *   });
  */
 module.exports.load = function (location, options, done) {
   var allTasks = Promise.resolve();

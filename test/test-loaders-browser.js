@@ -60,9 +60,29 @@ describe('path-loader (browser loaders)', function () {
         .then(done, done);
     });
 
-    // We cannot test relative requests with the current test framework
+    it('relative existing file (without dot)', function (done) {
+      jsonLoader
+        .load('base/project.json')
+        .then(JSON.parse)
+        .then(function (json) {
+          assert.deepEqual(personJson, json);
+        })
+        .then(done, done);
+    });
 
-    it('missing file', function (done) {
+    it('relative existing file (with dot)', function (done) {
+      jsonLoader
+        .load('./base/project.json')
+        .then(JSON.parse)
+        .then(function (json) {
+          assert.deepEqual(personJson, json);
+        }, function (err) {
+          throw err;
+        })
+        .then(done, done);
+    });
+
+    it('missing file (different origin)', function (done) {
       jsonLoader
         .load('http://localhost:44444/missing.json')
         .then(function () {
@@ -70,6 +90,17 @@ describe('path-loader (browser loaders)', function () {
         }, function (err) {
           // superagent doesn't handle an XHR request that returns 404 very well
           assert.equal('Origin is not allowed by Access-Control-Allow-Origin', err.message);
+        })
+        .then(done, done);
+    });
+
+    it('missing file (same origin)', function (done) {
+      jsonLoader
+        .load('base/missing.json')
+        .then(function () {
+          throw new Error('jsonLoader.load should had failed');
+        }, function (err) {
+          assert.equal(404, err.status);
         })
         .then(done, done);
     });

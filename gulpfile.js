@@ -24,14 +24,18 @@
 
 'use strict';
 
+var $ = require('gulp-load-plugins')({
+  rename: {
+    'gulp-jsdoc-to-markdown': 'jsdoc2MD'
+  }
+});
 var browserify = require('browserify');
 var del = require('del');
-var eslint = require('gulp-eslint');
 var fs = require('fs');
 var gulp = require('gulp');
-var istanbul = require('gulp-istanbul');
+var KarmaServer = require('karma').Server;
 var mocha = require('gulp-mocha');
-var mochaPhantomJS = require('gulp-mocha-phantomjs');
+var path = require('path');
 var runSequence = require('run-sequence');
 var source = require('vinyl-source-stream');
 var testHelpers = require('./test/helpers');
@@ -46,7 +50,7 @@ if (typeof Promise === 'undefined') {
 function displayCoverageReport (display) {
   if (display) {
     gulp.src([])
-      .pipe(istanbul.writeReports());
+      .pipe($.istanbul.writeReports());
   }
 }
 
@@ -93,9 +97,9 @@ gulp.task('lint', function () {
       '!test/**/*.js',
       'gulpfile.js'
     ])
-    .pipe(eslint())
-    .pipe(eslint.format('stylish'))
-    .pipe(eslint.failAfterError());
+    .pipe($.eslint())
+    .pipe($.eslint.format('stylish'))
+    .pipe($.eslint.failAfterError());
 });
 
 gulp.task('test-node', function (cb) {
@@ -104,8 +108,8 @@ gulp.task('test-node', function (cb) {
       'lib/**/*.js',
       '!lib/loaders/file-browser.js'
     ])
-    .pipe(istanbul({includeUntested: true}))
-    .pipe(istanbul.hookRequire()) // Force `require` to return covered files
+    .pipe($.istanbul({includeUntested: true}))
+    .pipe($.istanbul.hookRequire()) // Force `require` to return covered files
     .on('finish', function () {
       gulp.src([
         'test/**/test-*.js',
@@ -135,6 +139,14 @@ gulp.task('test-browser', ['browserify'], function (cb) {
     if (httpServer) {
       httpServer.close();
     }
+  }
+
+  function finisher (err) {
+    cleanUp();
+
+    displayCoverageReport(runningAllTests);
+
+    return err;
   }
 
   Promise.resolve()
@@ -169,30 +181,19 @@ gulp.task('test-browser', ['browserify'], function (cb) {
     })
     .then(function () {
       return new Promise(function (resolve, reject) {
-        gulp
-          .src(basePath + 'test-browser.html')
-          .pipe(mochaPhantomJS({
-            phantomjs: {
-              localToRemoteUrlAccessEnabled: true,
-              webSecurityEnabled: false,
-              ignoreResourceErrors: true
-            },
-            timeout: 5000
-          }))
-          .on('error', function (err) {
-            cleanUp();
-            displayCoverageReport(runningAllTests);
-
+        new KarmaServer({
+          configFile: path.join(__dirname, 'test/browser/karma.conf.js'),
+          singleRun: true
+        }, function (err) {
+          if (err) {
             reject(err);
-          })
-          .on('finish', function () {
-            cleanUp();
-            displayCoverageReport(runningAllTests);
-
+          } else {
             resolve();
-          });
+          }
+        }).start();
       });
     })
+    .then(finisher, finisher)
     .then(cb, cb);
 });
 
@@ -204,4 +205,13 @@ gulp.task('test', function (cb) {
   runSequence('test-node', 'test-browser', cb);
 });
 
-gulp.task('default', ['lint', 'browserify', 'test']);
+gulp.task('docs', function () {
+  return gulp.src([
+    './index.js'
+  ])
+    .pipe($.concat('API.md'))
+    .pipe($.jsdoc2MD())
+    .pipe(gulp.dest('docs'));
+});
+
+gulp.task('default', ['lint', 'browserify', 'test', 'docs']);
