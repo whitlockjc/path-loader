@@ -40,8 +40,7 @@ The path-loader project's API documentation can be found here: https://github.co
 Below is the list of projects being used by path-loader and the purpose(s) they are used for:
 
 * [native-promise-only][native-promise-only]: Used to shim in [Promises][promises] support
-* [path-loader][path-loader]: Used to load Swagger files from the local filesystem and remote URLs
-* [traverse][traverse]: Utilities for processing JSON
+* [superagent][superagent]: AJAX for the browser and Node.js
 
 [bower]: http://bower.io/
 [native-promise-only]: https://www.npmjs.com/package/native-promise-only
