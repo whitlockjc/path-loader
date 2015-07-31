@@ -30,11 +30,11 @@ var $ = require('gulp-load-plugins')({
   }
 });
 var browserify = require('browserify');
+var buffer = require('vinyl-buffer');
 var del = require('del');
 var fs = require('fs');
 var gulp = require('gulp');
 var KarmaServer = require('karma').Server;
-var mocha = require('gulp-mocha');
 var path = require('path');
 var runSequence = require('run-sequence');
 var source = require('vinyl-source-stream');
@@ -62,13 +62,11 @@ gulp.task('browserify', function (cb) {
         standalone: 'PathLoader'
       });
 
-      if (!useDebug) {
-        b.transform({global: true}, 'uglifyify');
-      }
-
       b.transform('brfs')
         .bundle()
         .pipe(source('path-loader' + (!useDebug ? '-min' : '') + '.js'))
+        .pipe($.if(!useDebug, buffer()))
+        .pipe($.if(!useDebug, $.uglify()))
         .pipe(gulp.dest('browser/'))
         .on('error', reject)
         .on('end', resolve);
@@ -116,7 +114,7 @@ gulp.task('test-node', function (cb) {
         '!test/browser/test-*.js',
         '!test/test-loaders-browser.js'
       ])
-        .pipe(mocha({reporter: 'spec'}))
+        .pipe($.mocha({reporter: 'spec'}))
         .on('end', function () {
           displayCoverageReport(!runningAllTests);
 

@@ -41,7 +41,7 @@ bower install path-loader --save
 The standalone binaries come in two flavors:
 
 * [path-loader.js](https://raw.github.com/whitlockjc/path-loader/master/browser/path-loader.js): _112kb_, full source  and source maps
-* [path-loader-min.js](https://raw.github.com/whitlockjc/path-loader/master/browser/path-loader-min.js): _20kb_, minified, compressed and no sourcemap
+* [path-loader-min.js](https://raw.github.com/whitlockjc/path-loader/master/browser/path-loader-min.js): _16kb_, minified, compressed and no sourcemap
 
 ### Node.js
 
