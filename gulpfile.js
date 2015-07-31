@@ -62,8 +62,7 @@ gulp.task('browserify', function (cb) {
         standalone: 'PathLoader'
       });
 
-      b.transform('brfs')
-        .bundle()
+      b.bundle()
         .pipe(source('path-loader' + (!useDebug ? '-min' : '') + '.js'))
         .pipe($.if(!useDebug, buffer()))
         .pipe($.if(!useDebug, $.uglify()))
