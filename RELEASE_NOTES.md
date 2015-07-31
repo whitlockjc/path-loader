@@ -1,5 +1,9 @@
 ## Release Notes
 
+### v0.1.1 (2015-07-31)
+
+* Minor release for smaller binaries
+
 ### v0.1.0 (2015-07-20)
 
 * Updated included dependencies to latest version
