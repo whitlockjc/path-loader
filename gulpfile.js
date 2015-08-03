@@ -56,20 +56,22 @@ function displayCoverageReport (display) {
 
 gulp.task('browserify', function (cb) {
   function browserifyBuild (useDebug) {
-    return new Promise(function (resolve, reject) {
-      var b = browserify('./index.js', {
-        debug: useDebug,
-        standalone: 'PathLoader'
-      });
+    return function () {
+      return new Promise(function (resolve, reject) {
+        var b = browserify('./index.js', {
+          debug: useDebug,
+          standalone: 'PathLoader'
+        });
 
-      b.bundle()
-        .pipe(source('path-loader' + (!useDebug ? '-min' : '') + '.js'))
-        .pipe($.if(!useDebug, buffer()))
-        .pipe($.if(!useDebug, $.uglify()))
-        .pipe(gulp.dest('browser/'))
-        .on('error', reject)
-        .on('end', resolve);
-    });
+        b.bundle()
+          .pipe(source('path-loader' + (!useDebug ? '-min' : '') + '.js'))
+          .pipe($.if(!useDebug, buffer()))
+          .pipe($.if(!useDebug, $.uglify()))
+          .pipe(gulp.dest('browser/'))
+          .on('error', reject)
+          .on('end', resolve);
+      });
+    };
   }
 
   Promise.resolve()
