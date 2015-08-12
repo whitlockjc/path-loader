@@ -38,6 +38,7 @@ Loads a document at the provided location and returns a JavaScript object repres
 | --- | --- | --- |
 | location | <code>object</code> | The location to the document |
 | [options] | <code>object</code> | The options |
+| [options.prepareRequest] | <code>[prepareRequestCallback](#prepareRequestCallback)</code> | The callback used to prepare the request |
 | done | <code>[resultCallback](#resultCallback)</code> | The result callback |
 
 **Example**  
@@ -89,7 +90,7 @@ PathLoader
 ```
 **Example**  
 ```js
-// Example using options.processContent to load a YAML file
+// Example loading a YAML file
 
 PathLoader
   .load('/Users/not-you/projects/path-loader/.travis.yml')

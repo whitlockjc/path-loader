@@ -70,6 +70,7 @@ function getLoader (location) {
  *
  * @param {object} location - The location to the document
  * @param {object} [options] - The options
+ * @param {prepareRequestCallback} [options.prepareRequest] - The callback used to prepare the request
  * @param {resultCallback} done - The result callback
  *
  * @returns {Promise} Always returns a promise even if there is a callback provided
@@ -119,7 +120,7 @@ function getLoader (location) {
  *   });
  *
  * @example
- * // Example using options.processContent to load a YAML file
+ * // Example loading a YAML file
  *
  * PathLoader
  *   .load('/Users/not-you/projects/path-loader/.travis.yml')
