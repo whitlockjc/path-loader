@@ -29,7 +29,9 @@ var supportedLoaders = {
   http: require('./lib/loaders/http'),
   https: require('./lib/loaders/http')
 };
-var defaultLoader = typeof window === 'undefined' ? supportedLoaders.file : supportedLoaders.http;
+var defaultLoader = typeof window === 'object' || typeof importScripts === 'function' ?
+      supportedLoaders.http :
+      supportedLoaders.file;
 
 // Load promises polyfill if necessary
 if (typeof Promise === 'undefined') {

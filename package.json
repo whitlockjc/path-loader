@@ -60,6 +60,6 @@
   },
   "dependencies": {
     "native-promise-only": "^0.8.0-a",
-    "superagent": "~1.2.0"
+    "superagent": "^1.4.0"
   }
 }
