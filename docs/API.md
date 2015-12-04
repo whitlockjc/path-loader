@@ -1,45 +1,28 @@
-## Functions
-<dl>
-<dt><a href="#getLoader">getLoader(location)</a> ⇒ <code>object</code></dt>
-<dd><p>Returns the loader for the given location.</p>
-</dd>
-<dt><a href="#load">load(location, [options], done)</a> ⇒ <code>Promise</code></dt>
-<dd><p>Loads a document at the provided location and returns a JavaScript object representation.</p>
-</dd>
-</dl>
-## Typedefs
-<dl>
-<dt><a href="#resultCallback">resultCallback</a> : <code>function</code></dt>
-<dd><p>Error-first callback.</p>
-</dd>
-<dt><a href="#prepareRequestCallback">prepareRequestCallback</a> : <code>function</code></dt>
-<dd><p>Callback used to provide access to altering a remote request prior to the request being made.</p>
-</dd>
-</dl>
-<a name="getLoader"></a>
-## getLoader(location) ⇒ <code>object</code>
-Returns the loader for the given location.
+<a name="module_PathLoader"></a>
+## PathLoader
+Utility that provides a single API for loading the content of a path/URL.
 
-**Kind**: global function  
-**Returns**: <code>object</code> - The loader to use  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| location | <code>string</code> | The location to load |
+* [PathLoader](#module_PathLoader)
+  * _static_
+    * [.load(location, [options], done)](#module_PathLoader.load) ⇒ <code>Promise</code>
+  * _inner_
+    * [~PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback) : <code>function</code>
+    * [~ResultCallback](#module_PathLoader..ResultCallback) : <code>function</code>
 
-<a name="load"></a>
-## load(location, [options], done) ⇒ <code>Promise</code>
+<a name="module_PathLoader.load"></a>
+### PathLoader.load(location, [options], done) ⇒ <code>Promise</code>
 Loads a document at the provided location and returns a JavaScript object representation.
 
-**Kind**: global function  
+**Kind**: static method of <code>[PathLoader](#module_PathLoader)</code>  
 **Returns**: <code>Promise</code> - Always returns a promise even if there is a callback provided  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | location | <code>object</code> | The location to the document |
 | [options] | <code>object</code> | The options |
-| [options.prepareRequest] | <code>[prepareRequestCallback](#prepareRequestCallback)</code> | The callback used to prepare the request |
-| done | <code>[resultCallback](#resultCallback)</code> | The result callback |
+| [options.prepareRequest] | <code>[PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback)</code> | The callback used to prepare the request |
+| done | <code>[ResultCallback](#module_PathLoader..ResultCallback)</code> | The result callback |
 
 **Example**  
 ```js
@@ -101,25 +84,25 @@ PathLoader
     console.error(err.stack);
   });
 ```
-<a name="resultCallback"></a>
-## resultCallback : <code>function</code>
-Error-first callback.
-
-**Kind**: global typedef  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [err] | <code>error</code> | The error if there is a problem |
-| [result] | <code>string</code> | The result of the function |
-
-<a name="prepareRequestCallback"></a>
-## prepareRequestCallback : <code>function</code>
+<a name="module_PathLoader..PrepareRequestCallback"></a>
+### PathLoader~PrepareRequestCallback : <code>function</code>
 Callback used to provide access to altering a remote request prior to the request being made.
 
-**Kind**: global typedef  
+**Kind**: inner typedef of <code>[PathLoader](#module_PathLoader)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | req | <code>object</code> | The Superagent request object |
 | location | <code>string</code> | The location being retrieved |
+
+<a name="module_PathLoader..ResultCallback"></a>
+### PathLoader~ResultCallback : <code>function</code>
+Error-first callback.
+
+**Kind**: inner typedef of <code>[PathLoader](#module_PathLoader)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [err] | <code>error</code> | The error if there is a problem |
+| [result] | <code>string</code> | The result of the function |
 

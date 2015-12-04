@@ -33,6 +33,7 @@ var invalidLoadScenarios = [
   [[], 'location is required'],
   [[false], 'location must be a string'],
   [['someLocation', false], 'options must be an object'],
+  [['git://github.com/whitlockjc/path-loader.git'], 'Unsupported scheme: git'],
   [['http://localhost:55555/project.json', {method: false}], 'options.method must be a string'],
   [['http://localhost:55555/project.json', {method: 'fake'}], 'options.method must be one of the following: ' +
     'delete, get, head, patch, post or put'],
@@ -60,10 +61,15 @@ describe('path-loader (' + header + ' general)', function () {
             return new Promise(function (resolve, reject) {
               swaggerLoader.load.apply(swaggerLoader, scenario[0])
                 .then(function () {
-                  reject(new Error('swaggerLoader.load should had failed (Test #' + index + ')'));
+                  reject(new Error('pathLoader.load should had failed (Test #' + index + ')'));
                 }, function (err) {
                   try {
-                    assert.ok(err instanceof TypeError);
+                    if (err.message.indexOf('Unsupported scheme: ') > -1) {
+                      assert.ok(err instanceof Error);
+                    } else {
+                      assert.ok(err instanceof TypeError);
+                    }
+
                     assert.equal(scenario[1], err.message);
 
                     resolve();
@@ -90,7 +96,12 @@ describe('path-loader (' + header + ' general)', function () {
             return new Promise(function (resolve, reject) {
               var args = scenario[0].concat(function (err) {
                 try {
-                  assert.ok(err instanceof TypeError);
+                  if (err.message.indexOf('Unsupported scheme: ') > -1) {
+                    assert.ok(err instanceof Error);
+                  } else {
+                    assert.ok(err instanceof TypeError);
+                  }
+
                   assert.equal(scenario[1], err.message);
 
                   resolve();

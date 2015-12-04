@@ -1,5 +1,9 @@
 ## Release Notes
 
+### v0.2.1 (2015-12-04)
+
+* Updated `#load` to create an `Error` whenever attempting to load a resource whose scheme is unsupported
+
 ### v0.2.0 (2015-09-18)
 
 * Update to work within service and web workers *(Ensure the environment identification works properly)* *(Issue #4)*

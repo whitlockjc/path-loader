@@ -27,7 +27,7 @@
 'use strict';
 
 var assert = require('assert');
-var jsonLoader = require('..');
+var pathLoader = require('..');
 var YAML = require('js-yaml');
 
 var personJson = require('./browser/project.json');
@@ -35,10 +35,10 @@ var personJson = require('./browser/project.json');
 describe('path-loader (browser loaders)', function () {
   describe('file', function () {
     it('URL', function (done) {
-      jsonLoader
+      pathLoader
         .load('file:///Users/not-you/projects/path-loaders/test/browser/project.json')
         .then(function () {
-          throw new Error('jsonLoader.load should had failed');
+          throw new Error('pathLoader.load should had failed');
         }, function (err) {
           assert.ok(err instanceof TypeError);
           assert.equal('The \'file\' scheme is not supported in the browser', err.message);
@@ -49,7 +49,7 @@ describe('path-loader (browser loaders)', function () {
 
   describe('http', function () {
     it('absolute existing file', function (done) {
-      jsonLoader
+      pathLoader
         .load('http://localhost:44444/project.json')
         .then(JSON.parse)
         .then(function (json) {
@@ -61,7 +61,7 @@ describe('path-loader (browser loaders)', function () {
     });
 
     it('relative existing file (without dot)', function (done) {
-      jsonLoader
+      pathLoader
         .load('base/project.json')
         .then(JSON.parse)
         .then(function (json) {
@@ -71,7 +71,7 @@ describe('path-loader (browser loaders)', function () {
     });
 
     it('relative existing file (with dot)', function (done) {
-      jsonLoader
+      pathLoader
         .load('./base/project.json')
         .then(JSON.parse)
         .then(function (json) {
@@ -83,10 +83,10 @@ describe('path-loader (browser loaders)', function () {
     });
 
     it('missing file (different origin)', function (done) {
-      jsonLoader
+      pathLoader
         .load('http://localhost:44444/missing.json')
         .then(function () {
-          throw new Error('jsonLoader.load should had failed');
+          throw new Error('pathLoader.load should had failed');
         }, function (err) {
           // superagent doesn't handle an XHR request that returns 404 very well
           assert.equal('Origin is not allowed by Access-Control-Allow-Origin', err.message);
@@ -95,10 +95,10 @@ describe('path-loader (browser loaders)', function () {
     });
 
     it('missing file (same origin)', function (done) {
-      jsonLoader
+      pathLoader
         .load('base/missing.json')
         .then(function () {
-          throw new Error('jsonLoader.load should had failed');
+          throw new Error('pathLoader.load should had failed');
         }, function (err) {
           assert.equal(404, err.status);
         })
@@ -107,7 +107,7 @@ describe('path-loader (browser loaders)', function () {
 
     it('make sure options.method works right', function (done) {
       // This is a convoluted test but it helps get code coverage up
-      jsonLoader
+      pathLoader
         .load('http://localhost:44444/project.json', {method: 'delete'})
         .then(JSON.parse)
         .then(function (json) {
@@ -121,7 +121,7 @@ describe('path-loader (browser loaders)', function () {
     it('should support non-JSON with options.processContent', function (done) {
       var fileUrl = 'http://localhost:44444/project.json';
 
-      jsonLoader
+      pathLoader
         .load(fileUrl)
         .then(YAML.safeLoad)
         .then(function (json) {
@@ -135,16 +135,16 @@ describe('path-loader (browser loaders)', function () {
     it('should support path requiring authentication/authorization using options.prepareRequest', function (done) {
       var fileUrl = 'http://localhost:44444/secure/project.json';
 
-      jsonLoader
+      pathLoader
         .load(fileUrl)
         .then(function () {
-          throw new Error('jsonLoader.load should had failed');
+          throw new Error('pathLoader.load should had failed');
         }, function (err) {
           assert.equal(401, err.status);
         })
         .then(function () {
           return new Promise(function (resolve) {
-            jsonLoader.load(fileUrl, {
+            pathLoader.load(fileUrl, {
               prepareRequest: function (req) {
                 req.auth('whitlockjc', 'path-loader');
               }
@@ -167,7 +167,7 @@ describe('path-loader (browser loaders)', function () {
   // Since http and https have the same implementation, no need to test them individually
   describe('https', function () {
     it('make sure we get a loader', function (done) {
-      jsonLoader
+      pathLoader
         .load('https://api.github.com/repos/whitlockjc/path-loader')
         .then(JSON.parse)
         .then(function (json) {
@@ -180,7 +180,7 @@ describe('path-loader (browser loaders)', function () {
   // Since we know Promises are already handling errors/responses properly, we just need to test a successful callback
   // with a callback.
   it('callback', function (done) {
-    jsonLoader
+    pathLoader
       .load('http://localhost:44444/project.json', function (err, document) {
         assert.ok(!err);
         assert.deepEqual(personJson, JSON.parse(document));

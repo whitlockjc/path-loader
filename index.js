@@ -24,6 +24,12 @@
 
 'use strict';
 
+/**
+ * Utility that provides a single API for loading the content of a path/URL.
+ *
+ * @module PathLoader
+ */
+
 var supportedLoaders = {
   file: require('./lib/loaders/file'),
   http: require('./lib/loaders/http'),
@@ -34,26 +40,31 @@ var defaultLoader = typeof window === 'object' || typeof importScripts === 'func
       supportedLoaders.file;
 
 // Load promises polyfill if necessary
+/* istanbul ignore if */
 if (typeof Promise === 'undefined') {
   require('native-promise-only');
 }
 
 /**
- * Error-first callback.
- *
- * @param {error} [err] - The error if there is a problem
- * @param {string} [result] - The result of the function
- *
- * @callback resultCallback
- */
-
-/**
  * Callback used to provide access to altering a remote request prior to the request being made.
+ *
+ * @typedef {function} PrepareRequestCallback
  *
  * @param {object} req - The Superagent request object
  * @param {string} location - The location being retrieved
  *
- * @callback prepareRequestCallback
+ * @alias module:PathLoader~PrepareRequestCallback
+ */
+
+/**
+ * Error-first callback.
+ *
+ * @typedef {function} ResultCallback
+ *
+ * @param {error} [err] - The error if there is a problem
+ * @param {string} [result] - The result of the function
+ *
+ * @alias module:PathLoader~ResultCallback
  */
 
 /**
@@ -62,9 +73,22 @@ if (typeof Promise === 'undefined') {
  * @param {string} location - The location to load
  *
  * @returns {object} The loader to use
+ *
+ * @private
  */
 function getLoader (location) {
-  return supportedLoaders[location.split(':')[0]] || defaultLoader;
+  var scheme = location.indexOf('://') === -1 ? '' : location.split('://')[0];
+  var loader = supportedLoaders[scheme];
+
+  if (typeof loader === 'undefined') {
+    if (scheme === '') {
+      loader = defaultLoader;
+    } else {
+      throw new Error('Unsupported scheme: ' + scheme);
+    }
+  }
+
+  return loader;
 }
 
 /**
@@ -72,8 +96,8 @@ function getLoader (location) {
  *
  * @param {object} location - The location to the document
  * @param {object} [options] - The options
- * @param {prepareRequestCallback} [options.prepareRequest] - The callback used to prepare the request
- * @param {resultCallback} done - The result callback
+ * @param {module:PathLoader~PrepareRequestCallback} [options.prepareRequest] - The callback used to prepare the request
+ * @param {module:PathLoader~ResultCallback} done - The result callback
  *
  * @returns {Promise} Always returns a promise even if there is a callback provided
  *
