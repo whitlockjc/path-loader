@@ -97,7 +97,7 @@ function getLoader (location) {
  * @param {object} location - The location to the document
  * @param {object} [options] - The options
  * @param {module:PathLoader~PrepareRequestCallback} [options.prepareRequest] - The callback used to prepare the request
- * @param {module:PathLoader~ResultCallback} done - The result callback
+ * @param {module:PathLoader~ResultCallback} [done] - The result callback
  *
  * @returns {Promise} Always returns a promise even if there is a callback provided
  *

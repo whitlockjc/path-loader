@@ -168,10 +168,10 @@ describe('path-loader (browser loaders)', function () {
   describe('https', function () {
     it('make sure we get a loader', function (done) {
       pathLoader
-        .load('https://api.github.com/repos/whitlockjc/path-loader')
+        .load('https://rawgit.com/whitlockjc/path-loader/master/package.json')
         .then(JSON.parse)
         .then(function (json) {
-          assert.equal('whitlockjc/path-loader', json.full_name);
+          assert.equal('path-loader', json.name);
         })
         .then(done, done);
     });

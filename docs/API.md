@@ -5,13 +5,13 @@ Utility that provides a single API for loading the content of a path/URL.
 
 * [PathLoader](#module_PathLoader)
   * _static_
-    * [.load(location, [options], done)](#module_PathLoader.load) ⇒ <code>Promise</code>
+    * [.load(location, [options], [done])](#module_PathLoader.load) ⇒ <code>Promise</code>
   * _inner_
     * [~PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback) : <code>function</code>
     * [~ResultCallback](#module_PathLoader..ResultCallback) : <code>function</code>
 
 <a name="module_PathLoader.load"></a>
-### PathLoader.load(location, [options], done) ⇒ <code>Promise</code>
+### PathLoader.load(location, [options], [done]) ⇒ <code>Promise</code>
 Loads a document at the provided location and returns a JavaScript object representation.
 
 **Kind**: static method of <code>[PathLoader](#module_PathLoader)</code>  
@@ -22,7 +22,7 @@ Loads a document at the provided location and returns a JavaScript object repres
 | location | <code>object</code> | The location to the document |
 | [options] | <code>object</code> | The options |
 | [options.prepareRequest] | <code>[PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback)</code> | The callback used to prepare the request |
-| done | <code>[ResultCallback](#module_PathLoader..ResultCallback)</code> | The result callback |
+| [done] | <code>[ResultCallback](#module_PathLoader..ResultCallback)</code> | The result callback |
 
 **Example**  
 ```js
