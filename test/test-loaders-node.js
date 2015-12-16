@@ -36,6 +36,17 @@ var projectJson = require('./browser/project.json');
 
 describe('path-loader (node.js loaders)', function () {
   describe('#load', function () {
+    it('should return proper error for invalid arguments', function (done) {
+      pathLoader
+        .load(path.resolve(__dirname, './browser/project.json'), {encoding: false})
+        .then(function (json) {
+          throw new Error('pathLoader.load should had failed');
+        }, function (err) {
+          assert.equal(err.message, 'options.encoding must be a string');
+        })
+        .then(done, done);
+    });
+
     describe('file', function () {
       it('absolute existing file', function (done) {
         pathLoader
@@ -93,6 +104,18 @@ describe('path-loader (node.js loaders)', function () {
           }, function (err) {
             assert.ok(err.message.indexOf('ENOENT') > -1);
             assert.ok(err.message.indexOf(filePath) > -1);
+          })
+          .then(done, done);
+      });
+
+      it('should support options.encoding', function (done) {
+        pathLoader
+          .load('file://' + path.resolve(__dirname, './browser/project.json'), {encoding: 'utf-8'})
+          .then(JSON.parse)
+          .then(function (json) {
+            assert.deepEqual(projectJson, json);
+          }, function (err) {
+            throw err;
           })
           .then(done, done);
       });

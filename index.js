@@ -108,6 +108,7 @@ function getLoader (location) {
  *
  * @param {object} location - The location to the document
  * @param {object} [options] - The options
+ * @param {string} [options.encoding='utf-8'] - The encoding to use when loading the file *(File loader only)*
  * @param {string} [options.method=get] - The HTTP method to use for the request *(HTTP loader only)*
  * @param {module:PathLoader~PrepareRequestCallback} [options.prepareRequest] - The callback used to prepare the request
  * *(HTTP loader only)*

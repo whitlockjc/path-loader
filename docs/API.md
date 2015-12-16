@@ -22,6 +22,7 @@ Loads a document at the provided location and returns a JavaScript object repres
 | --- | --- | --- | --- |
 | location | <code>object</code> |  | The location to the document |
 | [options] | <code>object</code> |  | The options |
+| [options.encoding] | <code>string</code> | <code>&quot;&#x27;utf-8&#x27;&quot;</code> | The encoding to use when loading the file *(File loader only)* |
 | [options.method] | <code>string</code> | <code>&quot;get&quot;</code> | The HTTP method to use for the request *(HTTP loader only)* |
 | [options.prepareRequest] | <code>[PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback)</code> |  | The callback used to prepare the request *(HTTP loader only)* |
 | [options.processContent] | <code>[ProcessResponseCallback](#module_PathLoader..ProcessResponseCallback)</code> |  | The callback used to process the response *(HTTP locaer only)* |
