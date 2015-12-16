@@ -45,6 +45,14 @@ if (typeof Promise === 'undefined') {
   require('native-promise-only');
 }
 
+function getScheme (location) {
+  if (typeof location !== 'undefined') {
+    location = location.indexOf('://') === -1 ? '' : location.split('://')[0];
+  }
+
+  return location;
+}
+
 /**
  * Callback used to provide access to altering a remote request prior to the request being made.
  *
@@ -55,6 +63,19 @@ if (typeof Promise === 'undefined') {
  *
  * @alias module:PathLoader~PrepareRequestCallback
  */
+
+ /**
+  * Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
+  *
+  * @typedef {function} ProcessResponseCallback
+  *
+  * @param {object} res - The Superagent response object
+  * @param {function} callback - Error-first callback
+  *
+  * @returns {*} the result
+  *
+  * @alias module:PathLoader~ProcessResponseCallback
+  */
 
 /**
  * Error-first callback.
@@ -67,17 +88,8 @@ if (typeof Promise === 'undefined') {
  * @alias module:PathLoader~ResultCallback
  */
 
-/**
- * Returns the loader for the given location.
- *
- * @param {string} location - The location to load
- *
- * @returns {object} The loader to use
- *
- * @private
- */
 function getLoader (location) {
-  var scheme = location.indexOf('://') === -1 ? '' : location.split('://')[0];
+  var scheme = getScheme(location);
   var loader = supportedLoaders[scheme];
 
   if (typeof loader === 'undefined') {
@@ -96,7 +108,11 @@ function getLoader (location) {
  *
  * @param {object} location - The location to the document
  * @param {object} [options] - The options
+ * @param {string} [options.method=get] - The HTTP method to use for the request *(HTTP loader only)*
  * @param {module:PathLoader~PrepareRequestCallback} [options.prepareRequest] - The callback used to prepare the request
+ * *(HTTP loader only)*
+ * @param {module:PathLoader~ProcessResponseCallback} [options.processContent] - The callback used to process the
+ * response *(HTTP locaer only)*
  * @param {module:PathLoader~ResultCallback} [done] - The result callback
  *
  * @returns {Promise} Always returns a promise even if there is a callback provided
@@ -177,8 +193,6 @@ module.exports.load = function (location, options, done) {
       if (typeof options !== 'object') {
         throw new TypeError('options must be an object');
       }
-    } else {
-      options = {};
     }
 
     if (typeof done !== 'undefined' && typeof done !== 'function') {
@@ -191,7 +205,7 @@ module.exports.load = function (location, options, done) {
     return new Promise(function (resolve, reject) {
       var loader = getLoader(location);
 
-      loader.load(location, options, function (err, document) {
+      loader.load(location, options || {}, function (err, document) {
         if (err) {
           reject(err);
         } else {

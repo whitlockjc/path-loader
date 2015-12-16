@@ -4,11 +4,12 @@ Utility that provides a single API for loading the content of a path/URL.
 
 
 * [PathLoader](#module_PathLoader)
-  * _static_
-    * [.load(location, [options], [done])](#module_PathLoader.load) ⇒ <code>Promise</code>
-  * _inner_
-    * [~PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback) : <code>function</code>
-    * [~ResultCallback](#module_PathLoader..ResultCallback) : <code>function</code>
+    * _static_
+        * [.load(location, [options], [done])](#module_PathLoader.load) ⇒ <code>Promise</code>
+    * _inner_
+        * [~ResultCallback](#module_PathLoader..ResultCallback) : <code>function</code>
+        * [~PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback) : <code>function</code>
+        * [~ProcessResponseCallback](#module_PathLoader..ProcessResponseCallback) ⇒ <code>\*</code>
 
 <a name="module_PathLoader.load"></a>
 ### PathLoader.load(location, [options], [done]) ⇒ <code>Promise</code>
@@ -17,12 +18,14 @@ Loads a document at the provided location and returns a JavaScript object repres
 **Kind**: static method of <code>[PathLoader](#module_PathLoader)</code>  
 **Returns**: <code>Promise</code> - Always returns a promise even if there is a callback provided  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| location | <code>object</code> | The location to the document |
-| [options] | <code>object</code> | The options |
-| [options.prepareRequest] | <code>[PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback)</code> | The callback used to prepare the request |
-| [done] | <code>[ResultCallback](#module_PathLoader..ResultCallback)</code> | The result callback |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| location | <code>object</code> |  | The location to the document |
+| [options] | <code>object</code> |  | The options |
+| [options.method] | <code>string</code> | <code>&quot;get&quot;</code> | The HTTP method to use for the request *(HTTP loader only)* |
+| [options.prepareRequest] | <code>[PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback)</code> |  | The callback used to prepare the request *(HTTP loader only)* |
+| [options.processContent] | <code>[ProcessResponseCallback](#module_PathLoader..ProcessResponseCallback)</code> |  | The callback used to process the response *(HTTP locaer only)* |
+| [done] | <code>[ResultCallback](#module_PathLoader..ResultCallback)</code> |  | The result callback |
 
 **Example**  
 ```js
@@ -84,6 +87,17 @@ PathLoader
     console.error(err.stack);
   });
 ```
+<a name="module_PathLoader..ResultCallback"></a>
+### PathLoader~ResultCallback : <code>function</code>
+Error-first callback.
+
+**Kind**: inner typedef of <code>[PathLoader](#module_PathLoader)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [err] | <code>error</code> | The error if there is a problem |
+| [result] | <code>string</code> | The result of the function |
+
 <a name="module_PathLoader..PrepareRequestCallback"></a>
 ### PathLoader~PrepareRequestCallback : <code>function</code>
 Callback used to provide access to altering a remote request prior to the request being made.
@@ -95,14 +109,15 @@ Callback used to provide access to altering a remote request prior to the reques
 | req | <code>object</code> | The Superagent request object |
 | location | <code>string</code> | The location being retrieved |
 
-<a name="module_PathLoader..ResultCallback"></a>
-### PathLoader~ResultCallback : <code>function</code>
-Error-first callback.
+<a name="module_PathLoader..ProcessResponseCallback"></a>
+### PathLoader~ProcessResponseCallback ⇒ <code>\*</code>
+Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
 
 **Kind**: inner typedef of <code>[PathLoader](#module_PathLoader)</code>  
+**Returns**: <code>\*</code> - the result  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [err] | <code>error</code> | The error if there is a problem |
-| [result] | <code>string</code> | The result of the function |
+| res | <code>object</code> | The Superagent response object |
+| callback | <code>function</code> | Error-first callback |
 

@@ -27,7 +27,7 @@
 'use strict';
 
 var assert = require('assert');
-var swaggerLoader = require('..');
+var pathLoader = require('..');
 
 var invalidLoadScenarios = [
   [[], 'location is required'],
@@ -36,33 +36,81 @@ var invalidLoadScenarios = [
   [['git://github.com/whitlockjc/path-loader.git'], 'Unsupported scheme: git'],
   [['http://localhost:55555/project.json', {method: false}], 'options.method must be a string'],
   [['http://localhost:55555/project.json', {method: 'fake'}], 'options.method must be one of the following: ' +
-    'delete, get, head, patch, post or put'],
+   'delete, get, head, patch, post or put'],
   [['http://localhost:55555/project.json', {prepareRequest: 'wrongType'}], 'options.prepareRequest must be a function'],
+  [['http://localhost:55555/project.json', {processContent: 'wrongType'}], 'options.processContent must be a function'],
   [['someLocation', {}, 'wrongType'], 'callback must be a function']
 ];
 
 var header = typeof window === 'undefined' ? 'node.js' : 'browser';
 
+function makeShouldHadFailedError (index) {
+  return new Error('pathLoader.load should had failed (Test #' + index + ')');
+}
+
+function validateError (expectedMessage, err, resolve, reject) {
+  try {
+    if (err.message.indexOf('Unsupported scheme: ') > -1) {
+      assert.ok(err instanceof Error);
+    } else {
+      assert.ok(err instanceof TypeError);
+    }
+
+    assert.equal(expectedMessage, err.message);
+
+    if (typeof resolve !== 'undefined') {
+      resolve();
+    }
+  } catch (err2) {
+    if (typeof reject === 'undefined') {
+      throw err2;
+    } else {
+      reject(err2);
+    }
+  }
+}
+
 describe('path-loader (' + header + ' general)', function () {
-  it('should always return a promise', function () {
-    // Promise invocation
-    assert.ok(swaggerLoader.load({}) instanceof Promise);
-    // Callback invocation
-    assert.ok(swaggerLoader.load({}, function () {}) instanceof Promise);
-  });
+  describe('#load', function () {
+    it('should always return a promise', function () {
+      // Promise invocation
+      assert.ok(pathLoader.load({}) instanceof Promise);
+      // Callback invocation
+      assert.ok(pathLoader.load({}, function () {}) instanceof Promise);
+    });
 
-  describe('promises', function () {
-    it('should return proper error for invalid arguments', function (done) {
-      var allTests = Promise.resolve();
+    describe('promises', function () {
+      it('should return proper error for invalid arguments', function (done) {
+        var allTests = Promise.resolve();
 
-      invalidLoadScenarios.forEach(function (scenario, index) {
-        allTests = allTests
-          .then(function () {
-            return new Promise(function (resolve, reject) {
-              swaggerLoader.load.apply(swaggerLoader, scenario[0])
-                .then(function () {
-                  reject(new Error('pathLoader.load should had failed (Test #' + index + ')'));
-                }, function (err) {
+        invalidLoadScenarios.forEach(function (scenario, index) {
+          allTests = allTests
+            .then(function () {
+              return new Promise(function (resolve, reject) {
+                pathLoader.load.apply(pathLoader, scenario[0])
+                  .then(function () {
+                    reject(makeShouldHadFailedError(index));
+                  }, function (err) {
+                    validateError(scenario[1], err, resolve, reject);
+                  });
+              });
+            });
+        });
+
+        allTests.then(done, done);
+      });
+    });
+
+    describe('callbacks', function () {
+      it('should return proper error for invalid arguments', function (done) {
+        var allTests = Promise.resolve();
+
+        // We cannot test the first or last scenarios with callbacks
+        invalidLoadScenarios.slice(1, invalidLoadScenarios.length - 1).forEach(function (scenario) {
+          allTests = allTests
+            .then(function () {
+              return new Promise(function (resolve, reject) {
+                var args = scenario[0].concat(function (err) {
                   try {
                     if (err.message.indexOf('Unsupported scheme: ') > -1) {
                       assert.ok(err instanceof Error);
@@ -77,45 +125,14 @@ describe('path-loader (' + header + ' general)', function () {
                     reject(err);
                   }
                 });
-            });
-          });
-      });
 
-      allTests.then(done, done);
-    });
-  });
-
-  describe('callbacks', function () {
-    it('should return proper error for invalid arguments', function (done) {
-      var allTests = Promise.resolve();
-
-      // We cannot test the first or last scenarios with callbacks
-      invalidLoadScenarios.slice(1, invalidLoadScenarios.length - 1).forEach(function (scenario) {
-        allTests = allTests
-          .then(function () {
-            return new Promise(function (resolve, reject) {
-              var args = scenario[0].concat(function (err) {
-                try {
-                  if (err.message.indexOf('Unsupported scheme: ') > -1) {
-                    assert.ok(err instanceof Error);
-                  } else {
-                    assert.ok(err instanceof TypeError);
-                  }
-
-                  assert.equal(scenario[1], err.message);
-
-                  resolve();
-                } catch (err) {
-                  reject(err);
-                }
+                pathLoader.load.apply(pathLoader, args);
               });
-
-              swaggerLoader.load.apply(swaggerLoader, args);
             });
-          });
-      });
+        });
 
-      allTests.then(done, done);
+        allTests.then(done, done);
+      });
     });
   });
 });

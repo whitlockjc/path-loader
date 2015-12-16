@@ -26,7 +26,6 @@
 
 var basicAuth = require('basic-auth');
 var connect = require('connect');
-var YAML = require('js-yaml');
 
 var app = connect();
 var personJson = require('./browser/project.json');
@@ -62,13 +61,6 @@ app.use(function (req, res) {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 200;
       res.end(JSON.stringify(personJson));
-
-      break;
-    case '/project.yaml':
-    case '/secure/project.yaml':
-      res.setHeader('Content-Type', 'application/x-yaml');
-      res.statusCode = 200;
-      res.end(YAML.safeDump(personJson));
 
       break;
     default:
