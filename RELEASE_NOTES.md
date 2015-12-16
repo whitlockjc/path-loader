@@ -1,5 +1,9 @@
 ## Release Notes
 
+### v0.3.1 (2015-12-15)
+
+* Remove unused `path` module from the browser builds)
+
 ### v0.3.0 (2015-12-15)
 
 * Updated `#load` to take an `encoding` option *(Used only in Node.js and when loading a file)*
