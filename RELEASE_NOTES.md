@@ -1,5 +1,10 @@
 ## Release Notes
 
+### v0.3.0 (2015-12-15)
+
+* Updated `#load` to take an `encoding` option *(Used only in Node.js and when loading a file)*
+* Updated `#load` to take a `processContent` option *(Used only when loading a file from http/https)*
+
 ### v0.2.1 (2015-12-04)
 
 * Updated `#load` to create an `Error` whenever attempting to load a resource whose scheme is unsupported
