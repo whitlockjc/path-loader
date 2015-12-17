@@ -185,7 +185,7 @@ describe('path-loader (browser loaders)', function () {
           pathLoader
             .load('http://localhost:44444/project.json', {
               processContent: function (res, callback) {
-                callback(JSON.parse(res.text));
+                callback(undefined, JSON.parse(res.text));
               }
             })
             .then(function (json) {
@@ -201,11 +201,11 @@ describe('path-loader (browser loaders)', function () {
 
           pathLoader
             .load('http://localhost:44444/project.json', {
-              processContent: function (res, callback) {
+              processContent: function () {
                 throw new Error(expectedMessage);
               }
             })
-            .then(function (json) {
+            .then(function () {
               throw new Error('pathLoader.load should had failed');
             }, function (err) {
               assert.equal(err.message, expectedMessage);

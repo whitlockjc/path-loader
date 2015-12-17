@@ -60,6 +60,7 @@ function getScheme (location) {
  *
  * @param {object} req - The Superagent request object
  * @param {string} location - The location being retrieved
+ * @param {function} callback - First callback
  *
  * @alias module:PathLoader~PrepareRequestCallback
  */
@@ -113,7 +114,7 @@ function getLoader (location) {
  * @param {module:PathLoader~PrepareRequestCallback} [options.prepareRequest] - The callback used to prepare the request
  * *(HTTP loader only)*
  * @param {module:PathLoader~ProcessResponseCallback} [options.processContent] - The callback used to process the
- * response *(HTTP locaer only)*
+ * response
  * @param {module:PathLoader~ResultCallback} [done] - The result callback
  *
  * @returns {Promise} Always returns a promise even if there is a callback provided
@@ -182,6 +183,11 @@ module.exports.load = function (location, options, done) {
     options = undefined;
   }
 
+  // Default options to empty object
+  if (typeof options === 'undefined') {
+    options = {};
+  }
+
   // Validate arguments
   allTasks = allTasks.then(function () {
     if (typeof location === 'undefined') {
@@ -193,6 +199,8 @@ module.exports.load = function (location, options, done) {
     if (typeof options !== 'undefined') {
       if (typeof options !== 'object') {
         throw new TypeError('options must be an object');
+      } else if (typeof options.processContent !== 'undefined' && typeof options.processContent !== 'function') {
+        throw new TypeError('options.processContent must be a function');
       }
     }
 
@@ -202,19 +210,35 @@ module.exports.load = function (location, options, done) {
   });
 
   // Load the document from the provided location and process it
-  allTasks = allTasks.then(function () {
-    return new Promise(function (resolve, reject) {
-      var loader = getLoader(location);
+  allTasks = allTasks
+    .then(function () {
+      return new Promise(function (resolve, reject) {
+        var loader = getLoader(location);
 
-      loader.load(location, options || {}, function (err, document) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(document);
-        }
+        loader.load(location, options || {}, function (err, document) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(document);
+          }
+        });
       });
+    })
+    .then(function (res) {
+      if (options.processContent) {
+        return new Promise(function (resolve, reject) {
+          options.processContent(res, function (err, processed) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(processed);
+            }
+          });
+        });
+      } else {
+        return res;
+      }
     });
-  });
 
   // Use the callback if provided and it is a function
   if (typeof done === 'function') {

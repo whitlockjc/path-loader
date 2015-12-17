@@ -25,7 +25,7 @@ Loads a document at the provided location and returns a JavaScript object repres
 | [options.encoding] | <code>string</code> | <code>&quot;&#x27;utf-8&#x27;&quot;</code> | The encoding to use when loading the file *(File loader only)* |
 | [options.method] | <code>string</code> | <code>&quot;get&quot;</code> | The HTTP method to use for the request *(HTTP loader only)* |
 | [options.prepareRequest] | <code>[PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback)</code> |  | The callback used to prepare the request *(HTTP loader only)* |
-| [options.processContent] | <code>[ProcessResponseCallback](#module_PathLoader..ProcessResponseCallback)</code> |  | The callback used to process the response *(HTTP locaer only)* |
+| [options.processContent] | <code>[ProcessResponseCallback](#module_PathLoader..ProcessResponseCallback)</code> |  | The callback used to process the response |
 | [done] | <code>[ResultCallback](#module_PathLoader..ResultCallback)</code> |  | The result callback |
 
 **Example**  
@@ -109,6 +109,7 @@ Callback used to provide access to altering a remote request prior to the reques
 | --- | --- | --- |
 | req | <code>object</code> | The Superagent request object |
 | location | <code>string</code> | The location being retrieved |
+| callback | <code>function</code> | First callback |
 
 <a name="module_PathLoader..ProcessResponseCallback"></a>
 ### PathLoader~ProcessResponseCallback ⇒ <code>\*</code>

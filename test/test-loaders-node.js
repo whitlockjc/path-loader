@@ -39,7 +39,7 @@ describe('path-loader (node.js loaders)', function () {
     it('should return proper error for invalid arguments', function (done) {
       pathLoader
         .load(path.resolve(__dirname, './browser/project.json'), {encoding: false})
-        .then(function (json) {
+        .then(function () {
           throw new Error('pathLoader.load should had failed');
         }, function (err) {
           assert.equal(err.message, 'options.encoding must be a string');
@@ -118,6 +118,40 @@ describe('path-loader (node.js loaders)', function () {
             throw err;
           })
           .then(done, done);
+      });
+
+      describe('should support options.processContent', function () {
+        it('valid response', function (done) {
+          pathLoader
+            .load('./test/browser/project.json', {
+              processContent: function (res, callback) {
+                callback(undefined, JSON.parse(res));
+              }
+            })
+            .then(function (json) {
+              assert.deepEqual(projectJson, json);
+            }, function (err) {
+              throw err;
+            })
+            .then(done, done);
+        });
+
+        it('thrown error', function (done) {
+          var expectedMessage = 'Thrown error';
+
+          pathLoader
+            .load('./test/browser/project.json', {
+              processContent: function () {
+                throw new Error(expectedMessage);
+              }
+            })
+            .then(function () {
+              throw new Error('pathLoader.load should had failed');
+            }, function (err) {
+              assert.equal(err.message, expectedMessage);
+            })
+            .then(done, done);
+        });
       });
     });
 
@@ -206,7 +240,7 @@ describe('path-loader (node.js loaders)', function () {
           pathLoader
             .load('http://localhost:55555/project.json', {
               processContent: function (res, callback) {
-                callback(JSON.parse(res.text));
+                callback(undefined, JSON.parse(res.text));
               }
             })
             .then(function (json) {
@@ -222,11 +256,11 @@ describe('path-loader (node.js loaders)', function () {
 
           pathLoader
             .load('http://localhost:55555/project.json', {
-              processContent: function (res, callback) {
+              processContent: function () {
                 throw new Error(expectedMessage);
               }
             })
-            .then(function (json) {
+            .then(function () {
               throw new Error('pathLoader.load should had failed');
             }, function (err) {
               assert.equal(err.message, expectedMessage);
