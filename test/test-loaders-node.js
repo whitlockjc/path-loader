@@ -286,17 +286,5 @@ describe('path-loader (node.js loaders)', function () {
           .then(done, done);
       });
     });
-
-    // Since we know Promises are already handling errors/responses properly, we just need to test a successful callback
-    // with a callback.
-    it('callback', function (done) {
-      pathLoader
-        .load(path.resolve(__dirname, './browser/project.json'), function (err, document) {
-          assert.ok(!err);
-          assert.deepEqual(projectJson, JSON.parse(document));
-
-          done();
-        });
-    });
   });
 });

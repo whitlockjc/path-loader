@@ -78,17 +78,6 @@ function getScheme (location) {
   * @alias module:PathLoader~ProcessResponseCallback
   */
 
-/**
- * Error-first callback.
- *
- * @typedef {function} ResultCallback
- *
- * @param {error} [err] - The error if there is a problem
- * @param {string} [result] - The result of the function
- *
- * @alias module:PathLoader~ResultCallback
- */
-
 function getLoader (location) {
   var scheme = getScheme(location);
   var loader = supportedLoaders[scheme];
@@ -115,25 +104,8 @@ function getLoader (location) {
  * *(HTTP loader only)*
  * @param {module:PathLoader~ProcessResponseCallback} [options.processContent] - The callback used to process the
  * response
- * @param {module:PathLoader~ResultCallback} [done] - The result callback
  *
  * @returns {Promise} Always returns a promise even if there is a callback provided
- *
- * @example
- * // Example using callbacks
- *
- * PathLoader
- *   .load('./package.json', function (err, document) {
- *     if (err) {
- *       console.error(err.stack);
- *     } else {
- *       try {
- *         document = JSON.parse(document)
- *         console.log(document.name + ' (' + document.version + '): ' + document.description);
- *       } catch (err2) {
- *         callback(err2);
- *       }
- *     });
  *
  * @example
  * // Example using Promises
@@ -152,8 +124,9 @@ function getLoader (location) {
  *
  * PathLoader
  *   .load('https://api.github.com/repos/whitlockjc/path-loader', {
- *     prepareRequest: function (req) {
- *       req.auth('my-username', 'my-password')
+ *     prepareRequest: function (req, callback) {
+ *       req.auth('my-username', 'my-password');
+ *       callback(undefined, req);
  *     }
  *   })
  *   .then(JSON.parse)
@@ -174,14 +147,24 @@ function getLoader (location) {
  *   }, function (err) {
  *     console.error(err.stack);
  *   });
+ *
+ * @example
+ * // Example loading a YAML file with options.processContent (Useful if you need information in the raw response)
+ *
+ * PathLoader
+ *   .load('/Users/not-you/projects/path-loader/.travis.yml', {
+ *     processContent: function (res, callback) {
+ *       callback(YAML.safeLoad(res.text));
+ *     }
+ *   })
+ *   .then(function (document) {
+ *     console.log('path-loader uses the', document.language, 'language.');
+ *   }, function (err) {
+ *     console.error(err.stack);
+ *   });
  */
-module.exports.load = function (location, options, done) {
+module.exports.load = function (location, options) {
   var allTasks = Promise.resolve();
-
-  if (arguments.length === 2 && typeof options === 'function') {
-    done = options;
-    options = undefined;
-  }
 
   // Default options to empty object
   if (typeof options === 'undefined') {
@@ -202,10 +185,6 @@ module.exports.load = function (location, options, done) {
       } else if (typeof options.processContent !== 'undefined' && typeof options.processContent !== 'function') {
         throw new TypeError('options.processContent must be a function');
       }
-    }
-
-    if (typeof done !== 'undefined' && typeof done !== 'function') {
-      throw new TypeError('callback must be a function');
     }
   });
 
@@ -241,16 +220,6 @@ module.exports.load = function (location, options, done) {
         return res;
       }
     });
-
-  // Use the callback if provided and it is a function
-  if (typeof done === 'function') {
-    allTasks = allTasks
-      .then(function (document) {
-        done(undefined, document);
-      }, function (err) {
-        done(err);
-      });
-  }
 
   return allTasks;
 };

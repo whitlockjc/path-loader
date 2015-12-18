@@ -39,8 +39,7 @@ var invalidLoadScenarios = [
   [[pkgJsonLocation, {method: 'fake'}],
    'options.method must be one of the following: delete, get, head, patch, post or put'],
   [[pkgJsonLocation, {prepareRequest: 'wrongType'}], 'options.prepareRequest must be a function'],
-  [[pkgJsonLocation, {processContent: 'wrongType'}], 'options.processContent must be a function'],
-  [['someLocation', {}, 'wrongType'], 'callback must be a function']
+  [[pkgJsonLocation, {processContent: 'wrongType'}], 'options.processContent must be a function']
 ];
 
 var header = typeof window === 'undefined' ? 'node.js' : 'browser';
@@ -80,60 +79,24 @@ describe('path-loader (' + header + ' general)', function () {
       assert.ok(pathLoader.load({}, function () {}) instanceof Promise);
     });
 
-    describe('promises', function () {
-      it('should return proper error for invalid arguments', function (done) {
-        var allTests = Promise.resolve();
+    it('should return proper error for invalid arguments', function (done) {
+      var allTests = Promise.resolve();
 
-        invalidLoadScenarios.forEach(function (scenario, index) {
-          allTests = allTests
-            .then(function () {
-              return new Promise(function (resolve, reject) {
-                pathLoader.load.apply(pathLoader, scenario[0])
-                  .then(function () {
-                    reject(makeShouldHadFailedError(index));
-                  }, function (err) {
-                    validateError(scenario[1], err, resolve, reject);
-                  });
-              });
-            });
-        });
-
-        allTests.then(done, done);
-      });
-    });
-
-    describe('callbacks', function () {
-      it('should return proper error for invalid arguments', function (done) {
-        var allTests = Promise.resolve();
-
-        // We cannot test the first or last scenarios with callbacks
-        invalidLoadScenarios.slice(1, invalidLoadScenarios.length - 1).forEach(function (scenario) {
-          allTests = allTests
-            .then(function () {
-              return new Promise(function (resolve, reject) {
-                var args = scenario[0].concat(function (err) {
-                  try {
-                    if (err.message.indexOf('Unsupported scheme: ') > -1) {
-                      assert.ok(err instanceof Error);
-                    } else {
-                      assert.ok(err instanceof TypeError);
-                    }
-
-                    assert.equal(scenario[1], err.message);
-
-                    resolve();
-                  } catch (err) {
-                    reject(err);
-                  }
+      invalidLoadScenarios.forEach(function (scenario, index) {
+        allTests = allTests
+          .then(function () {
+            return new Promise(function (resolve, reject) {
+              pathLoader.load.apply(pathLoader, scenario[0])
+                .then(function () {
+                  reject(makeShouldHadFailedError(index));
+                }, function (err) {
+                  validateError(scenario[1], err, resolve, reject);
                 });
-
-                pathLoader.load.apply(pathLoader, args);
-              });
             });
-        });
-
-        allTests.then(done, done);
+          });
       });
+
+      allTests.then(done, done);
     });
 
     describe('options.processContent error handling', function () {
