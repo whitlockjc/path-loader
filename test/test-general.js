@@ -29,16 +29,17 @@
 var assert = require('assert');
 var pathLoader = require('..');
 
+var pkgJsonLocation = 'http://cdn.rawgit.com/whitlockjc/path-loader/master/package.json';
 var invalidLoadScenarios = [
   [[], 'location is required'],
   [[false], 'location must be a string'],
   [['someLocation', false], 'options must be an object'],
   [['git://github.com/whitlockjc/path-loader.git'], 'Unsupported scheme: git'],
-  [['http://localhost:55555/project.json', {method: false}], 'options.method must be a string'],
-  [['http://localhost:55555/project.json', {method: 'fake'}], 'options.method must be one of the following: ' +
-   'delete, get, head, patch, post or put'],
-  [['http://localhost:55555/project.json', {prepareRequest: 'wrongType'}], 'options.prepareRequest must be a function'],
-  [['http://localhost:55555/project.json', {processContent: 'wrongType'}], 'options.processContent must be a function'],
+  [[pkgJsonLocation, {method: false}], 'options.method must be a string'],
+  [[pkgJsonLocation, {method: 'fake'}],
+   'options.method must be one of the following: delete, get, head, patch, post or put'],
+  [[pkgJsonLocation, {prepareRequest: 'wrongType'}], 'options.prepareRequest must be a function'],
+  [[pkgJsonLocation, {processContent: 'wrongType'}], 'options.processContent must be a function'],
   [['someLocation', {}, 'wrongType'], 'callback must be a function']
 ];
 
@@ -132,6 +133,42 @@ describe('path-loader (' + header + ' general)', function () {
         });
 
         allTests.then(done, done);
+      });
+    });
+
+    describe('options.processContent error handling', function () {
+      it('thrown error', function (done) {
+        var expectedMessage = 'Thrown error';
+
+        pathLoader
+          .load(pkgJsonLocation, {
+            processContent: function () {
+              throw new Error(expectedMessage);
+            }
+          })
+          .then(function () {
+            throw new Error('pathLoader.load should had failed');
+          }, function (err) {
+            assert.equal(err.message, expectedMessage);
+          })
+          .then(done, done);
+      });
+
+      it('returned error', function (done) {
+        var expectedMessage = 'Thrown error';
+
+        pathLoader
+          .load(pkgJsonLocation, {
+            processContent: function (res, callback) {
+              callback(new Error(expectedMessage));
+            }
+          })
+          .then(function () {
+            throw new Error('pathLoader.load should had failed');
+          }, function (err) {
+            assert.equal(err.message, expectedMessage);
+          })
+          .then(done, done);
       });
     });
   });

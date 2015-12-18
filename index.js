@@ -209,6 +209,8 @@ module.exports.load = function (location, options, done) {
     }
   });
 
+  // TODO: Validate callback arguments 
+
   // Load the document from the provided location and process it
   allTasks = allTasks
     .then(function () {

@@ -33,6 +33,8 @@ var path = require('path');
 var pathLoader = require('..');
 
 var projectJson = require('./browser/project.json');
+var baseLocation = 'http://localhost:55555/';
+var projectJsonLocation = baseLocation + 'project.json';
 
 describe('path-loader (node.js loaders)', function () {
   describe('#load', function () {
@@ -120,38 +122,20 @@ describe('path-loader (node.js loaders)', function () {
           .then(done, done);
       });
 
-      describe('should support options.processContent', function () {
-        it('valid response', function (done) {
-          pathLoader
-            .load('./test/browser/project.json', {
-              processContent: function (res, callback) {
-                callback(undefined, JSON.parse(res));
-              }
-            })
-            .then(function (json) {
-              assert.deepEqual(projectJson, json);
-            }, function (err) {
-              throw err;
-            })
-            .then(done, done);
-        });
-
-        it('thrown error', function (done) {
-          var expectedMessage = 'Thrown error';
-
-          pathLoader
-            .load('./test/browser/project.json', {
-              processContent: function () {
-                throw new Error(expectedMessage);
-              }
-            })
-            .then(function () {
-              throw new Error('pathLoader.load should had failed');
-            }, function (err) {
-              assert.equal(err.message, expectedMessage);
-            })
-            .then(done, done);
-        });
+      it('should support options.processContent', function (done) {
+        // Error tests are in test-general.js
+        pathLoader
+          .load('./test/browser/project.json', {
+            processContent: function (res, callback) {
+              callback(undefined, JSON.parse(res));
+            }
+          })
+          .then(function (json) {
+            assert.deepEqual(projectJson, json);
+          }, function (err) {
+            throw err;
+          })
+          .then(done, done);
       });
     });
 
@@ -170,7 +154,7 @@ describe('path-loader (node.js loaders)', function () {
 
       it('absolute existing file', function (done) {
         pathLoader
-          .load('http://localhost:55555/project.json')
+          .load(projectJsonLocation)
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -182,7 +166,7 @@ describe('path-loader (node.js loaders)', function () {
 
       it('missing file', function (done) {
         pathLoader
-          .load('http://localhost:55555/missing.json')
+          .load(baseLocation + 'missing.json')
           .then(function () {
             throw new Error('pathLoader.load should had failed');
           }, function (err) {
@@ -194,7 +178,7 @@ describe('path-loader (node.js loaders)', function () {
       it('make sure options.method works right', function (done) {
         // This is a convoluted test but it helps get code coverage up
         pathLoader
-          .load('http://localhost:55555/project.json', {method: 'delete'})
+          .load(projectJsonLocation, {method: 'delete'})
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -204,59 +188,13 @@ describe('path-loader (node.js loaders)', function () {
           .then(done, done);
       });
 
-      it('should support path requiring authentication/authorization using options.prepareRequest', function (done) {
-        var fileUrl = 'http://localhost:55555/secure/project.json';
-
-        pathLoader
-          .load(fileUrl)
-          .then(function () {
-            throw new Error('pathLoader.load should had failed');
-          }, function (err) {
-            assert.equal(401, err.status);
-          })
-          .then(function () {
-            return new Promise(function (resolve) {
-              pathLoader.load(fileUrl, {
-                prepareRequest: function (req) {
-                  req.auth('whitlockjc', 'path-loader');
-                }
-              })
-                .then(function (document) {
-                  resolve(document);
-                });
-            });
-          })
-          .then(JSON.parse)
-          .then(function (document) {
-            assert.deepEqual(projectJson, document);
-          }, function (err) {
-            throw err;
-          })
-          .then(done, done);
-      });
-
-      describe('should support options.processContent', function () {
-        it('valid response', function (done) {
-          pathLoader
-            .load('http://localhost:55555/project.json', {
-              processContent: function (res, callback) {
-                callback(undefined, JSON.parse(res.text));
-              }
-            })
-            .then(function (json) {
-              assert.deepEqual(projectJson, json);
-            }, function (err) {
-              throw err;
-            })
-            .then(done, done);
-        });
-
+      describe('should support options.prepareRequest', function () {
         it('thrown error', function (done) {
           var expectedMessage = 'Thrown error';
 
           pathLoader
-            .load('http://localhost:55555/project.json', {
-              processContent: function () {
+            .load(projectJsonLocation, {
+              prepareRequest: function () {
                 throw new Error(expectedMessage);
               }
             })
@@ -267,6 +205,72 @@ describe('path-loader (node.js loaders)', function () {
             })
             .then(done, done);
         });
+
+        it('returned error', function (done) {
+          var expectedMessage = 'Thrown error';
+
+          pathLoader
+            .load(projectJsonLocation, {
+              prepareRequest: function (res, callback) {
+                callback(new Error(expectedMessage));
+              }
+            })
+            .then(function () {
+              throw new Error('pathLoader.load should had failed');
+            }, function (err) {
+              assert.equal(err.message, expectedMessage);
+            })
+            .then(done, done);
+        });
+
+        it('valid callback', function (done) {
+          var fileUrl = baseLocation + 'secure/project.json';
+
+          pathLoader
+            .load(fileUrl)
+            .then(function () {
+              throw new Error('pathLoader.load should had failed');
+            }, function (err) {
+              assert.equal(401, err.status);
+            })
+            .then(function () {
+              return new Promise(function (resolve) {
+                pathLoader.load(fileUrl, {
+                  prepareRequest: function (req, callback) {
+                    req.auth('whitlockjc', 'path-loader');
+
+                    callback(undefined, req);
+                  }
+                })
+                  .then(function (document) {
+                    resolve(document);
+                  });
+              });
+            })
+            .then(JSON.parse)
+            .then(function (document) {
+              assert.deepEqual(projectJson, document);
+            }, function (err) {
+              throw err;
+            })
+            .then(done, done);
+        });
+      });
+
+      it('should support options.processContent', function (done) {
+        // Error tests are in test-general.js
+        pathLoader
+          .load(projectJsonLocation, {
+            processContent: function (res, callback) {
+              callback(undefined, JSON.parse(res.text));
+            }
+          })
+          .then(function (json) {
+            assert.deepEqual(projectJson, json);
+          }, function (err) {
+            throw err;
+          })
+          .then(done, done);
       });
     });
 
@@ -274,7 +278,7 @@ describe('path-loader (node.js loaders)', function () {
     describe('https', function () {
       it('make sure we get a loader', function (done) {
         pathLoader
-          .load('https://rawgit.com/whitlockjc/path-loader/master/package.json')
+          .load('https://cdn.rawgit.com/whitlockjc/path-loader/master/package.json')
           .then(JSON.parse)
           .then(function (json) {
             assert.equal('path-loader', json.name);
