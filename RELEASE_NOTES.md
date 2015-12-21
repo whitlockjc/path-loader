@@ -1,5 +1,11 @@
 ## Release Notes
 
+### v1.0.0 (2015-12-21)
+
+* Removed callback support for `#load` so the API is Promise-based only
+* Updated `options.prepareRequest` and `options.processContent` to now be async *(Takes a `callback` argument)*
+* Updated `options.processContent` to work for all loaders, not just HTTP-based ones
+
 ### v0.3.1 (2015-12-15)
 
 * Remove unused `path` module from the browser builds)
