@@ -70,10 +70,12 @@ function getScheme (location) {
   *
   * @typedef {function} ProcessResponseCallback
   *
-  * @param {object} res - The Superagent response object
+  * @param {object} res - The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent
+  * object in that it will have a `text` property whose value is the raw string value being processed.  This was done
+  * for consistency.)*
   * @param {function} callback - Error-first callback
   *
-  * @returns {*} the result
+  * @returns {*} the result of processing the responsexs
   *
   * @alias module:PathLoader~ProcessResponseCallback
   */
@@ -206,7 +208,9 @@ module.exports.load = function (location, options) {
     .then(function (res) {
       if (options.processContent) {
         return new Promise(function (resolve, reject) {
-          options.processContent(res, function (err, processed) {
+          // For consistency between file and http, always send an object with a 'text' property containing the raw
+          // string value being processed.
+          options.processContent(typeof res === 'object' ? res : {text: res}, function (err, processed) {
             if (err) {
               reject(err);
             } else {
@@ -215,7 +219,9 @@ module.exports.load = function (location, options) {
           });
         });
       } else {
-        return res;
+        // If there was no content processor, we will assume that for all objects that it is a Superagent response
+        // and will return its `text` property value.  Otherwise, we will return the raw response.
+        return typeof res === 'object' ? res.text : res;
       }
     });
 

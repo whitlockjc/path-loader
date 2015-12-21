@@ -91,11 +91,11 @@ PathLoader
 Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
 
 **Kind**: inner typedef of <code>[PathLoader](#module_PathLoader)</code>  
-**Returns**: <code>\*</code> - the result  
+**Returns**: <code>\*</code> - the result of processing the responsexs  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| res | <code>object</code> | The Superagent response object |
+| res | <code>object</code> | The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent object in that it will have a `text` property whose value is the raw string value being processed.  This was done for consistency.)* |
 | callback | <code>function</code> | Error-first callback |
 
 <a name="module_PathLoader..PrepareRequestCallback"></a>

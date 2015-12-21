@@ -127,7 +127,7 @@ describe('path-loader (node.js loaders)', function () {
         pathLoader
           .load('./test/browser/project.json', {
             processContent: function (res, callback) {
-              callback(undefined, JSON.parse(res));
+              callback(undefined, JSON.parse(res.text));
             }
           })
           .then(function (json) {
