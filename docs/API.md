@@ -77,7 +77,7 @@ PathLoader
 PathLoader
   .load('/Users/not-you/projects/path-loader/.travis.yml', {
     processContent: function (res, callback) {
-      callback(YAML.safeLoad(res.text));
+      callback(null, YAML.safeLoad(res.text));
     }
   })
   .then(function (document) {
