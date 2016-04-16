@@ -1,4 +1,5 @@
 <a name="module_PathLoader"></a>
+
 ## PathLoader
 Utility that provides a single API for loading the content of a path/URL.
 
@@ -11,6 +12,7 @@ Utility that provides a single API for loading the content of a path/URL.
         * [~PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback) : <code>function</code>
 
 <a name="module_PathLoader.load"></a>
+
 ### PathLoader.load(location, [options]) ⇒ <code>Promise</code>
 Loads a document at the provided location and returns a JavaScript object representation.
 
@@ -77,7 +79,7 @@ PathLoader
 PathLoader
   .load('/Users/not-you/projects/path-loader/.travis.yml', {
     processContent: function (res, callback) {
-      callback(YAML.safeLoad(res.text));
+      callback(null, YAML.safeLoad(res.text));
     }
   })
   .then(function (document) {
@@ -87,6 +89,7 @@ PathLoader
   });
 ```
 <a name="module_PathLoader..ProcessResponseCallback"></a>
+
 ### PathLoader~ProcessResponseCallback ⇒ <code>\*</code>
 Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
 
@@ -99,6 +102,7 @@ Callback used to provide access to processing the raw response of the request be
 | callback | <code>function</code> | Error-first callback |
 
 <a name="module_PathLoader..PrepareRequestCallback"></a>
+
 ### PathLoader~PrepareRequestCallback : <code>function</code>
 Callback used to provide access to altering a remote request prior to the request being made.
 
