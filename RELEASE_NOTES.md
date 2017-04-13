@@ -1,5 +1,9 @@
 ## Release Notes
 
+### v1.0.1 (2017-04-13)
+
+* Updated dependencies to fix a security vulnerability _(Issue #11)_
+
 ### v1.0.0 (2015-12-21)
 
 * Removed callback support for `#load` so the API is Promise-based only
