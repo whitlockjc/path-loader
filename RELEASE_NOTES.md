@@ -1,8 +1,12 @@
 ## Release Notes
 
-### v1.0.1 (2017-04-13)
+### v1.0.2 (2017-04-13)
 
 * Updated dependencies to fix a security vulnerability _(Issue #11)_
+
+### v1.0.1 (2015-12-21)
+
+* Make response object passed to options.processContent consistent
 
 ### v1.0.0 (2015-12-21)
 
