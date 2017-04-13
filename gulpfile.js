@@ -22,6 +22,8 @@
  * THE SOFTWARE.
  */
 
+/* global Promise */
+
 'use strict';
 
 var $ = require('gulp-load-plugins')({
@@ -101,26 +103,25 @@ gulp.task('lint', function () {
     .pipe($.eslint.failAfterError());
 });
 
-gulp.task('test-node', function (cb) {
-  gulp.src([
-      'index.js',
-      'lib/**/*.js',
-      '!lib/loaders/file-browser.js'
-    ])
+gulp.task('pre-test', function () {
+  return gulp.src([
+    'index.js',
+    'lib/**/*.js',
+    '!lib/loaders/file-browser.js'
+  ])
     .pipe($.istanbul({includeUntested: true}))
-    .pipe($.istanbul.hookRequire()) // Force `require` to return covered files
-    .on('finish', function () {
-      gulp.src([
-        'test/**/test-*.js',
-        '!test/browser/test-*.js',
-        '!test/test-loaders-browser.js'
-      ])
-        .pipe($.mocha({reporter: 'spec'}))
-        .on('end', function () {
-          displayCoverageReport(!runningAllTests);
+    .pipe($.istanbul.hookRequire()); // Force `require` to return covered files
+});
 
-          cb();
-        });
+gulp.task('test-node', ['pre-test'], function () {
+  return gulp.src([
+    'test/**/test-*.js',
+    '!test/browser/test-*.js',
+    '!test/test-loaders-browser.js'
+  ])
+    .pipe($.mocha({reporter: 'spec'}))
+    .on('end', function () {
+      displayCoverageReport(!runningAllTests);
     });
 });
 
