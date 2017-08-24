@@ -30,6 +30,8 @@
  * @module PathLoader
  */
 
+console.log('custom PathLoader')
+
 var supportedLoaders = {
   file: require('./lib/loaders/file'),
   http: require('./lib/loaders/http'),
@@ -99,7 +101,7 @@ function getLoader(location, options) {
       throw new Error('Unsupported scheme: ' + scheme);
     }
   }
-  console.log({
+  console.log('getLoader', {
     defaultScheme,
     loader
   })
