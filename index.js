@@ -81,6 +81,7 @@ function getScheme(location) {
  */
 
 function getLoader(location, options) {
+  options = options || {};
   var scheme = getScheme(location);
   var loaders = options.loaders || {};
   var loader = loaders[scheme] || supportedLoaders[scheme];

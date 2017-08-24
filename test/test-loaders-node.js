@@ -40,7 +40,9 @@ describe('path-loader (node.js loaders)', function () {
   describe('#load', function () {
     it('should return proper error for invalid arguments', function (done) {
       pathLoader
-        .load(path.resolve(__dirname, './browser/project.json'), {encoding: false})
+        .load(path.resolve(__dirname, './browser/project.json'), {
+          encoding: false
+        })
         .then(function () {
           throw new Error('pathLoader.load should had failed');
         }, function (err) {
@@ -65,6 +67,18 @@ describe('path-loader (node.js loaders)', function () {
       it('relative existing file (without dot)', function (done) {
         pathLoader
           .load('test/browser/project.json')
+          .then(JSON.parse)
+          .then(function (json) {
+            assert.deepEqual(projectJson, json);
+          })
+          .then(done, done);
+      });
+
+      it('relative existing file with basePath', function (done) {
+        pathLoader
+          .load('browser/project.json', {
+            basePath: 'test'
+          })
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -112,7 +126,9 @@ describe('path-loader (node.js loaders)', function () {
 
       it('should support options.encoding', function (done) {
         pathLoader
-          .load('file://' + path.resolve(__dirname, './browser/project.json'), {encoding: 'utf-8'})
+          .load('file://' + path.resolve(__dirname, './browser/project.json'), {
+            encoding: 'utf-8'
+          })
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -178,7 +194,9 @@ describe('path-loader (node.js loaders)', function () {
       it('make sure options.method works right', function (done) {
         // This is a convoluted test but it helps get code coverage up
         pathLoader
-          .load(projectJsonLocation, {method: 'delete'})
+          .load(projectJsonLocation, {
+            method: 'delete'
+          })
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -236,12 +254,12 @@ describe('path-loader (node.js loaders)', function () {
             .then(function () {
               return new Promise(function (resolve) {
                 pathLoader.load(fileUrl, {
-                  prepareRequest: function (req, callback) {
-                    req.auth('whitlockjc', 'path-loader');
+                    prepareRequest: function (req, callback) {
+                      req.auth('whitlockjc', 'path-loader');
 
-                    callback(undefined, req);
-                  }
-                })
+                      callback(undefined, req);
+                    }
+                  })
                   .then(function (document) {
                     resolve(document);
                   });

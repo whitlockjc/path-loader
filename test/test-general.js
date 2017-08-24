@@ -31,24 +31,48 @@ var pathLoader = require('..');
 
 var pkgJsonLocation = 'http://cdn.rawgit.com/whitlockjc/path-loader/master/package.json';
 var invalidLoadScenarios = [
-  [[], 'location is required'],
-  [[false], 'location must be a string'],
-  [['someLocation', false], 'options must be an object'],
-  [['git://github.com/whitlockjc/path-loader.git'], 'Unsupported scheme: git'],
-  [[pkgJsonLocation, {method: false}], 'options.method must be a string'],
-  [[pkgJsonLocation, {method: 'fake'}],
-   'options.method must be one of the following: delete, get, head, patch, post or put'],
-  [[pkgJsonLocation, {prepareRequest: 'wrongType'}], 'options.prepareRequest must be a function'],
-  [[pkgJsonLocation, {processContent: 'wrongType'}], 'options.processContent must be a function']
+  [
+    [], 'location is required'
+  ],
+  [
+    [false], 'location must be a string'
+  ],
+  [
+    ['someLocation', false], 'options must be an object'
+  ],
+  [
+    ['git://github.com/whitlockjc/path-loader.git'], 'Unsupported scheme: git'
+  ],
+  [
+    [pkgJsonLocation, {
+      method: false
+    }], 'options.method must be a string'
+  ],
+  [
+    [pkgJsonLocation, {
+      method: 'fake'
+    }],
+    'options.method must be one of the following: delete, get, head, patch, post or put'
+  ],
+  [
+    [pkgJsonLocation, {
+      prepareRequest: 'wrongType'
+    }], 'options.prepareRequest must be a function'
+  ],
+  [
+    [pkgJsonLocation, {
+      processContent: 'wrongType'
+    }], 'options.processContent must be a function'
+  ]
 ];
 
 var header = typeof window === 'undefined' ? 'node.js' : 'browser';
 
-function makeShouldHadFailedError (index) {
+function makeShouldHadFailedError(index) {
   return new Error('pathLoader.load should had failed (Test #' + index + ')');
 }
 
-function validateError (expectedMessage, err, resolve, reject) {
+function validateError(expectedMessage, err, resolve, reject) {
   try {
     if (err.message.indexOf('Unsupported scheme: ') > -1) {
       assert.ok(err instanceof Error);
@@ -110,7 +134,7 @@ describe('path-loader (' + header + ' general)', function () {
             }
           })
           .then(function () {
-            throw new Error('pathLoader.load should had failed');
+            throw new Error('pathLoader.load should have failed');
           }, function (err) {
             assert.equal(err.message, expectedMessage);
           })
@@ -127,7 +151,7 @@ describe('path-loader (' + header + ' general)', function () {
             }
           })
           .then(function () {
-            throw new Error('pathLoader.load should had failed');
+            throw new Error('pathLoader.load should have failed');
           }, function (err) {
             assert.equal(err.message, expectedMessage);
           })
