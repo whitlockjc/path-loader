@@ -36,8 +36,8 @@ var supportedLoaders = {
   https: require('./lib/loaders/http')
 };
 var defaultLoader = typeof window === 'object' || typeof importScripts === 'function' ?
-      supportedLoaders.http :
-      supportedLoaders.file;
+  supportedLoaders.http :
+  supportedLoaders.file;
 
 // Load promises polyfill if necessary
 /* istanbul ignore if */
@@ -45,7 +45,7 @@ if (typeof Promise === 'undefined') {
   require('native-promise-only');
 }
 
-function getScheme (location) {
+function getScheme(location) {
   if (typeof location !== 'undefined') {
     location = location.indexOf('://') === -1 ? '' : location.split('://')[0];
   }
@@ -65,24 +65,25 @@ function getScheme (location) {
  * @alias module:PathLoader~PrepareRequestCallback
  */
 
- /**
-  * Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
-  *
-  * @typedef {function} ProcessResponseCallback
-  *
-  * @param {object} res - The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent
-  * object in that it will have a `text` property whose value is the raw string value being processed.  This was done
-  * for consistency.)*
-  * @param {function} callback - Error-first callback
-  *
-  * @returns {*} the result of processing the responsexs
-  *
-  * @alias module:PathLoader~ProcessResponseCallback
-  */
+/**
+ * Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
+ *
+ * @typedef {function} ProcessResponseCallback
+ *
+ * @param {object} res - The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent
+ * object in that it will have a `text` property whose value is the raw string value being processed.  This was done
+ * for consistency.)*
+ * @param {function} callback - Error-first callback
+ *
+ * @returns {*} the result of processing the responsexs
+ *
+ * @alias module:PathLoader~ProcessResponseCallback
+ */
 
-function getLoader (location) {
+function getLoader(location, options) {
   var scheme = getScheme(location);
-  var loader = supportedLoaders[scheme];
+  var loaders = options.loaders || {};
+  var loader = loaders[scheme] || supportedLoaders[scheme];
 
   if (typeof loader === 'undefined') {
     if (scheme === '') {
@@ -210,7 +211,9 @@ module.exports.load = function (location, options) {
         return new Promise(function (resolve, reject) {
           // For consistency between file and http, always send an object with a 'text' property containing the raw
           // string value being processed.
-          options.processContent(typeof res === 'object' ? res : {text: res}, function (err, processed) {
+          options.processContent(typeof res === 'object' ? res : {
+            text: res
+          }, function (err, processed) {
             if (err) {
               reject(err);
             } else {
