@@ -35,9 +35,11 @@ var supportedLoaders = {
   http: require('./lib/loaders/http'),
   https: require('./lib/loaders/http')
 };
-var defaultLoader = typeof window === 'object' || typeof importScripts === 'function' ?
-  supportedLoaders.http :
-  supportedLoaders.file;
+var defaultScheme = typeof window === 'object' || typeof importScripts === 'function' ?
+  'http' :
+  'file';
+
+var defaultLoader = supportedLoaders[defaultScheme];
 
 // Load promises polyfill if necessary
 /* istanbul ignore if */
@@ -84,15 +86,23 @@ function getLoader(location, options) {
   options = options || {};
   var scheme = getScheme(location);
   var loaders = options.loaders || {};
+  console.log('getLoader', {
+    scheme,
+    loaders
+  })
   var loader = loaders[scheme] || supportedLoaders[scheme];
 
   if (typeof loader === 'undefined') {
     if (scheme === '') {
-      loader = defaultLoader;
+      loader = loaders[defaultScheme] || defaultLoader;
     } else {
       throw new Error('Unsupported scheme: ' + scheme);
     }
   }
+  console.log({
+    defaultScheme,
+    loader
+  })
 
   return loader;
 }
@@ -196,9 +206,9 @@ module.exports.load = function (location, options) {
   allTasks = allTasks
     .then(function () {
       return new Promise(function (resolve, reject) {
-        var loader = getLoader(location);
-
-        loader.load(location, options || {}, function (err, document) {
+        var loader = getLoader(location, options);
+        var load = typeof loader === 'function' ? loader : loader.load;
+        load(location, options || {}, function (err, document) {
           if (err) {
             reject(err);
           } else {
