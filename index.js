@@ -30,8 +30,6 @@
  * @module PathLoader
  */
 
-console.log('custom PathLoader')
-
 var supportedLoaders = {
   file: require('./lib/loaders/file'),
   http: require('./lib/loaders/http'),
@@ -141,7 +139,7 @@ function getScheme(location) {
  */
 const Base = require('./lib/base')
 
-module.exports = class PathLoader extends Base {
+class PathLoader extends Base {
   constructor(options) {
     super(options, 'PathLoader')
   }
@@ -216,13 +214,14 @@ module.exports = class PathLoader extends Base {
       }
     });
 
+    var self = this
     // Load the document from the provided location and process it
     allTasks = allTasks
       .then(() => {
-        return new Promise(function (resolve, reject) {
-          var loader = this.getLoader(location, options);
-          var load = typeof loader === 'function' ? loader : loader.load;
-          load(location, options || {}, function (err, document) {
+        return new Promise((resolve, reject) => {
+          var loader = self.getLoader(location, options);
+          var load = typeof loader === 'function' ? loader : loader.load.bind(loader);
+          load(location, options || {}, (err, document) => {
             if (err) {
               reject(err);
             } else {
@@ -233,12 +232,12 @@ module.exports = class PathLoader extends Base {
       })
       .then((res) => {
         if (options.processContent) {
-          return new Promise(function (resolve, reject) {
+          return new Promise((resolve, reject) => {
             // For consistency between file and http, always send an object with a 'text' property containing the raw
             // string value being processed.
             options.processContent(typeof res === 'object' ? res : {
               text: res
-            }, function (err, processed) {
+            }, (err, processed) => {
               if (err) {
                 reject(err);
               } else {
@@ -256,3 +255,14 @@ module.exports = class PathLoader extends Base {
     return allTasks;
   }
 };
+
+const pathLoader = new PathLoader()
+
+module.exports = {
+  pathLoader,
+  PathLoader
+}
+
+console.log({
+  pathLoader
+})

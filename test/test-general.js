@@ -27,7 +27,9 @@
 'use strict';
 
 var assert = require('assert');
-var pathLoader = require('..');
+var {
+  pathLoader
+} = require('..');
 
 var pkgJsonLocation = 'http://cdn.rawgit.com/whitlockjc/path-loader/master/package.json';
 var invalidLoadScenarios = [

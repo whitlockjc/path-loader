@@ -31,7 +31,9 @@ var helpers = require('./helpers');
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
-var pathLoader = require('..');
+var {
+  pathLoader
+} = require('..');
 
 var projectJson = require('./browser/project.json');
 var baseLocation = 'http://localhost:55555/';

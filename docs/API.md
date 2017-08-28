@@ -5,18 +5,16 @@ Utility that provides a single API for loading the content of a path/URL.
 
 
 * [PathLoader](#module_PathLoader)
-    * _static_
-        * [.load(location, [options])](#module_PathLoader.load) ⇒ <code>Promise</code>
-    * _inner_
-        * [~ProcessResponseCallback](#module_PathLoader..ProcessResponseCallback) ⇒ <code>\*</code>
-        * [~PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback) : <code>function</code>
+    * [~Base](#module_PathLoader..Base) ⇒ <code>Promise</code>
+    * [~PrepareRequestCallback](#module_PathLoader..PrepareRequestCallback) : <code>function</code>
+    * [~ProcessResponseCallback](#module_PathLoader..ProcessResponseCallback) ⇒ <code>\*</code>
 
-<a name="module_PathLoader.load"></a>
+<a name="module_PathLoader..Base"></a>
 
-### PathLoader.load(location, [options]) ⇒ <code>Promise</code>
+### PathLoader~Base ⇒ <code>Promise</code>
 Loads a document at the provided location and returns a JavaScript object representation.
 
-**Kind**: static method of <code>[PathLoader](#module_PathLoader)</code>  
+**Kind**: inner constant of <code>[PathLoader](#module_PathLoader)</code>  
 **Returns**: <code>Promise</code> - Always returns a promise even if there is a callback provided  
 
 | Param | Type | Default | Description |
@@ -88,19 +86,6 @@ PathLoader
     console.error(err.stack);
   });
 ```
-<a name="module_PathLoader..ProcessResponseCallback"></a>
-
-### PathLoader~ProcessResponseCallback ⇒ <code>\*</code>
-Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
-
-**Kind**: inner typedef of <code>[PathLoader](#module_PathLoader)</code>  
-**Returns**: <code>\*</code> - the result of processing the responsexs  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| res | <code>object</code> | The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent object in that it will have a `text` property whose value is the raw string value being processed.  This was done for consistency.)* |
-| callback | <code>function</code> | Error-first callback |
-
 <a name="module_PathLoader..PrepareRequestCallback"></a>
 
 ### PathLoader~PrepareRequestCallback : <code>function</code>
@@ -113,4 +98,17 @@ Callback used to provide access to altering a remote request prior to the reques
 | req | <code>object</code> | The Superagent request object |
 | location | <code>string</code> | The location being retrieved |
 | callback | <code>function</code> | First callback |
+
+<a name="module_PathLoader..ProcessResponseCallback"></a>
+
+### PathLoader~ProcessResponseCallback ⇒ <code>\*</code>
+Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
+
+**Kind**: inner typedef of <code>[PathLoader](#module_PathLoader)</code>  
+**Returns**: <code>\*</code> - the result of processing the responsexs  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| res | <code>object</code> | The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent object in that it will have a `text` property whose value is the raw string value being processed.  This was done for consistency.)* |
+| callback | <code>function</code> | Error-first callback |
 
