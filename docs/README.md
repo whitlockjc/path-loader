@@ -3,7 +3,7 @@ URLs.
 
 ## Installation
 
-path-loader is available for both Node.js and the browser.  Installation instructions for each environment are below.
+`path-loader` is available for both Node.js and the browser.  Installation instructions for each environment are below.
 
 ### Browser
 

@@ -49,7 +49,7 @@ if (typeof Promise === 'undefined') {
   require('native-promise-only');
 }
 
-function displayCoverageReport (display) {
+function displayCoverageReport(display) {
   if (display) {
     gulp.src([])
       .pipe($.istanbul.writeReports());
@@ -57,7 +57,7 @@ function displayCoverageReport (display) {
 }
 
 gulp.task('browserify', function (cb) {
-  function browserifyBuild (useDebug) {
+  function browserifyBuild(useDebug) {
     return function () {
       return new Promise(function (resolve, reject) {
         var b = browserify('./index.js', {
@@ -93,33 +93,34 @@ gulp.task('clean', function (done) {
 
 gulp.task('lint', function () {
   return gulp.src([
-      'lib/**/*.js',
-      'test/**/*.js',
-      '!test/**/*.js',
-      'gulpfile.js'
-    ])
-    .pipe($.eslint())
-    .pipe($.eslint.format('stylish'))
-    .pipe($.eslint.failAfterError());
-});
+    'lib/**/*.js',
+    'test/**/*.js',
+    '!test/**/*.js',
+    'gulpfile.js'
+  ])
+})
 
 gulp.task('pre-test', function () {
   return gulp.src([
-    'index.js',
-    'lib/**/*.js',
-    '!lib/loaders/file-browser.js'
-  ])
-    .pipe($.istanbul({includeUntested: true}))
+      'index.js',
+      'lib/**/*.js',
+      '!lib/loaders/file-browser.js'
+    ])
+    .pipe($.istanbul({
+      includeUntested: true
+    }))
     .pipe($.istanbul.hookRequire()); // Force `require` to return covered files
 });
 
 gulp.task('test-node', ['pre-test'], function () {
   return gulp.src([
-    'test/**/test-*.js',
-    '!test/browser/test-*.js',
-    '!test/test-loaders-browser.js'
-  ])
-    .pipe($.mocha({reporter: 'spec'}))
+      'test/**/test-*.js',
+      '!test/browser/test-*.js',
+      '!test/test-loaders-browser.js'
+    ])
+    .pipe($.mocha({
+      reporter: 'spec'
+    }))
     .on('end', function () {
       displayCoverageReport(!runningAllTests);
     });
@@ -129,7 +130,7 @@ gulp.task('test-browser', ['browserify'], function (cb) {
   var basePath = './test/browser/';
   var httpServer;
 
-  function cleanUp () {
+  function cleanUp() {
     // Clean up just in case
     del.sync([
       basePath + 'path-loader.js',
@@ -141,7 +142,7 @@ gulp.task('test-browser', ['browserify'], function (cb) {
     }
   }
 
-  function finisher (err) {
+  function finisher(err) {
     cleanUp();
 
     displayCoverageReport(runningAllTests);
@@ -173,7 +174,7 @@ gulp.task('test-browser', ['browserify'], function (cb) {
           })
           .on('end', function () {
             resolve();
-        });
+          });
       });
     })
     .then(function () {
@@ -207,11 +208,11 @@ gulp.task('test', function (cb) {
 
 gulp.task('docs', function () {
   return gulp.src([
-    './index.js'
-  ])
+      './index.js'
+    ])
     .pipe($.concat('API.md'))
     .pipe($.jsdoc2MD())
     .pipe(gulp.dest('docs'));
 });
 
-gulp.task('default', ['lint', 'browserify', 'test', 'docs']);
+gulp.task('default', ['browserify', 'test', 'docs']);

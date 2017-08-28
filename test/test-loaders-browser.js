@@ -27,7 +27,9 @@
 'use strict';
 
 var assert = require('assert');
-var pathLoader = require('..');
+var {
+  pathLoader
+} = require('..');
 
 var projectJson = require('./browser/project.json');
 var baseLocation = 'http://localhost:44444/';
@@ -110,7 +112,9 @@ describe('path-loader (browser loaders)', function () {
       it('make sure options.method works right', function (done) {
         // This is a convoluted test but it helps get code coverage up
         pathLoader
-          .load(baseLocation + 'project.json', {method: 'delete'})
+          .load(baseLocation + 'project.json', {
+            method: 'delete'
+          })
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -168,12 +172,12 @@ describe('path-loader (browser loaders)', function () {
             .then(function () {
               return new Promise(function (resolve) {
                 pathLoader.load(fileUrl, {
-                  prepareRequest: function (req, callback) {
-                    req.auth('whitlockjc', 'path-loader');
+                    prepareRequest: function (req, callback) {
+                      req.auth('whitlockjc', 'path-loader');
 
-                    callback(undefined, req);
-                  }
-                })
+                      callback(undefined, req);
+                    }
+                  })
                   .then(function (document) {
                     resolve(document);
                   });
