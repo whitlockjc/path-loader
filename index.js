@@ -70,46 +70,6 @@ function getScheme(location) {
  */
 
 /**
- * Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
- *
- * @typedef {function} ProcessResponseCallback
- *
- * @param {object} res - The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent
- * object in that it will have a `text` property whose value is the raw string value being processed.  This was done
- * for consistency.)*
- * @param {function} callback - Error-first callback
- *
- * @returns {*} the result of processing the responsexs
- *
- * @alias module:PathLoader~ProcessResponseCallback
- */
-
-function getLoader(location, options) {
-  options = options || {};
-  var scheme = getScheme(location);
-  var loaders = options.loaders || {};
-  console.log('getLoader', {
-    scheme,
-    loaders
-  })
-  var loader = loaders[scheme] || supportedLoaders[scheme];
-
-  if (typeof loader === 'undefined') {
-    if (scheme === '') {
-      loader = loaders[defaultScheme] || defaultLoader;
-    } else {
-      throw new Error('Unsupported scheme: ' + scheme);
-    }
-  }
-  console.log('getLoader', {
-    defaultScheme,
-    loader
-  })
-
-  return loader;
-}
-
-/**
  * Loads a document at the provided location and returns a JavaScript object representation.
  *
  * @param {object} location - The location to the document
@@ -179,67 +139,120 @@ function getLoader(location, options) {
  *     console.error(err.stack);
  *   });
  */
-module.exports.load = function (location, options) {
-  var allTasks = Promise.resolve();
+const Base = require('./lib/base')
 
-  // Default options to empty object
-  if (typeof options === 'undefined') {
-    options = {};
+module.exports = class PathLoader extends Base {
+  constructor(options) {
+    super(options, 'PathLoader')
   }
 
-  // Validate arguments
-  allTasks = allTasks.then(function () {
-    if (typeof location === 'undefined') {
-      throw new TypeError('location is required');
-    } else if (typeof location !== 'string') {
-      throw new TypeError('location must be a string');
-    }
+  createLoader(loader) {
+    return new loader(this.options)
+  }
 
-    if (typeof options !== 'undefined') {
-      if (typeof options !== 'object') {
-        throw new TypeError('options must be an object');
-      } else if (typeof options.processContent !== 'undefined' && typeof options.processContent !== 'function') {
-        throw new TypeError('options.processContent must be a function');
+  /**
+   * Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
+   *
+   * @typedef {function} ProcessResponseCallback
+   *
+   * @param {object} res - The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent
+   * object in that it will have a `text` property whose value is the raw string value being processed.  This was done
+   * for consistency.)*
+   * @param {function} callback - Error-first callback
+   *
+   * @returns {*} the result of processing the responsexs
+   *
+   * @alias module:PathLoader~ProcessResponseCallback
+   */
+
+  getLoader(location, options) {
+    options = options || {};
+    var scheme = getScheme(location);
+    var loaders = options.loaders || {};
+    this.log('getLoader: determine', {
+      scheme,
+      loaders
+    })
+    var loader = loaders[scheme] || supportedLoaders[scheme];
+
+    if (typeof loader === 'undefined') {
+      if (scheme === '') {
+        loader = loaders[defaultScheme] || defaultLoader;
+      } else {
+        throw new Error('Unsupported scheme: ' + scheme);
       }
     }
-  });
+    loader = this.createLoader(loader)
 
-  // Load the document from the provided location and process it
-  allTasks = allTasks
-    .then(function () {
-      return new Promise(function (resolve, reject) {
-        var loader = getLoader(location, options);
-        var load = typeof loader === 'function' ? loader : loader.load;
-        load(location, options || {}, function (err, document) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(document);
-          }
-        });
-      });
+    this.log('getLoader: created', {
+      loader
     })
-    .then(function (res) {
-      if (options.processContent) {
-        return new Promise(function (resolve, reject) {
-          // For consistency between file and http, always send an object with a 'text' property containing the raw
-          // string value being processed.
-          options.processContent(typeof res === 'object' ? res : {
-            text: res
-          }, function (err, processed) {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(processed);
-            }
-          });
-        });
-      } else {
-        // If there was no content processor, we will assume that for all objects that it is a Superagent response
-        // and will return its `text` property value.  Otherwise, we will return the raw response.
-        return typeof res === 'object' ? res.text : res;
+
+    return loader;
+  }
+
+  load(location, options) {
+    var allTasks = Promise.resolve();
+
+    // Default options to empty object
+    if (typeof options === 'undefined') {
+      options = {};
+    }
+
+    // Validate arguments
+    allTasks = allTasks.then(function () {
+      if (typeof location === 'undefined') {
+        throw new TypeError('location is required');
+      } else if (typeof location !== 'string') {
+        throw new TypeError('location must be a string');
+      }
+
+      if (typeof options !== 'undefined') {
+        if (typeof options !== 'object') {
+          throw new TypeError('options must be an object');
+        } else if (typeof options.processContent !== 'undefined' && typeof options.processContent !== 'function') {
+          throw new TypeError('options.processContent must be a function');
+        }
       }
     });
 
-  return allTasks;
+    // Load the document from the provided location and process it
+    allTasks = allTasks
+      .then(() => {
+        return new Promise(function (resolve, reject) {
+          var loader = this.getLoader(location, options);
+          var load = typeof loader === 'function' ? loader : loader.load;
+          load(location, options || {}, function (err, document) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(document);
+            }
+          });
+        });
+      })
+      .then((res) => {
+        if (options.processContent) {
+          return new Promise(function (resolve, reject) {
+            // For consistency between file and http, always send an object with a 'text' property containing the raw
+            // string value being processed.
+            options.processContent(typeof res === 'object' ? res : {
+              text: res
+            }, function (err, processed) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(processed);
+              }
+            });
+          });
+        } else {
+          // If there was no content processor, we will assume that for all objects that it is a Superagent response
+          // and will return its `text` property value.  Otherwise, we will return the raw response.
+          return typeof res === 'object' ? res.text : res;
+        }
+      });
+
+    return allTasks;
+  }
 };
