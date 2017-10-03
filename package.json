@@ -1,6 +1,6 @@
 {
   "name": "path-loader",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Utility that provides a single API for loading the content of a path/URL.",
   "main": "index.js",
   "scripts": {
@@ -59,6 +59,6 @@
   },
   "dependencies": {
     "native-promise-only": "^0.8.1",
-    "superagent": "^3.5.2"
+    "superagent": "^3.6.2"
   }
 }

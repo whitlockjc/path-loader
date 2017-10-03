@@ -72,13 +72,6 @@ function validateError (expectedMessage, err, resolve, reject) {
 
 describe('path-loader (' + header + ' general)', function () {
   describe('#load', function () {
-    it('should always return a promise', function () {
-      // Promise invocation
-      assert.ok(pathLoader.load({}) instanceof Promise);
-      // Callback invocation
-      assert.ok(pathLoader.load({}, function () {}) instanceof Promise);
-    });
-
     it('should return proper error for invalid arguments', function (done) {
       var allTests = Promise.resolve();
 
