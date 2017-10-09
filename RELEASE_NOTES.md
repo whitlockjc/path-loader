@@ -1,8 +1,12 @@
 ## Release Notes
 
-### v1.0.3 (2017-10-09)
+### v1.0.4 (2017-10-09)
 
 * Updated dependencies to fix a security vulnerability _(Issue #14)_
+
+### v1.0.3 (UNPUBLISHED)
+
+_(This version was unpublished from NPM and will not be installable.)_
 
 ### v1.0.2 (2017-04-13)
 
