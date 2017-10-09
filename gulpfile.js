@@ -103,6 +103,12 @@ gulp.task('lint', function () {
     .pipe($.eslint.failAfterError());
 });
 
+gulp.task('nsp', function (cb) {
+  $.nsp({
+    package: path.join(__dirname, 'package.json')
+  }, cb);
+});
+
 gulp.task('pre-test', function () {
   return gulp.src([
     'index.js',
@@ -214,4 +220,4 @@ gulp.task('docs', function () {
     .pipe(gulp.dest('docs'));
 });
 
-gulp.task('default', ['lint', 'browserify', 'test', 'docs']);
+gulp.task('default', ['lint', 'nsp', 'browserify', 'test', 'docs']);
