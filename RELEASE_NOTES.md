@@ -1,5 +1,9 @@
 ## Release Notes
 
+### TBD
+
+* Updated dependencies to fix a security vulnerability _(Issue #14)_
+
 ### v1.0.2 (2017-04-13)
 
 * Updated dependencies to fix a security vulnerability _(Issue #11)_
