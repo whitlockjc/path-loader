@@ -1,5 +1,10 @@
 ## Release Notes
 
+### v1.0.5 (2018-08-04)
+
+* Fix issue when working with buffered output _(Issue #17)_
+* Update `superagent` to remove the NSP security exemption _(Issue #16)_
+
 ### v1.0.4 (2017-10-09)
 
 * Updated dependencies to fix a security vulnerability _(Issue #14)_
