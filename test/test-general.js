@@ -29,7 +29,7 @@
 var assert = require('assert');
 var pathLoader = require('..');
 
-var pkgJsonLocation = 'http://cdn.rawgit.com/whitlockjc/path-loader/master/package.json';
+var pkgJsonLocation = 'https://rawgit.com/whitlockjc/path-loader/master/package.json';
 var invalidLoadScenarios = [
   [[], 'location is required'],
   [[false], 'location must be a string'],
@@ -74,9 +74,7 @@ describe('path-loader (' + header + ' general)', function () {
   describe('#load', function () {
     it('should always return a promise', function () {
       // Promise invocation
-      assert.ok(pathLoader.load({}) instanceof Promise);
-      // Callback invocation
-      assert.ok(pathLoader.load({}, function () {}) instanceof Promise);
+      assert.ok(pathLoader.load(pkgJsonLocation) instanceof Promise);
     });
 
     it('should return proper error for invalid arguments', function (done) {
