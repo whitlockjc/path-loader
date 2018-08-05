@@ -24,12 +24,6 @@
 
 'use strict';
 
-/**
- * Utility that provides a single API for loading the content of a path/URL.
- *
- * @module PathLoader
- */
-
 var supportedLoaders = {
   file: require('./lib/loaders/file'),
   http: require('./lib/loaders/http'),
@@ -54,6 +48,17 @@ function getScheme (location) {
 }
 
 /**
+ * Options used when loading a path.
+ *
+ * @typedef {object} LoadOptions
+ *
+ * @property {string} [encoding='utf-8'] - The encoding to use when loading the file *(File loader only)*
+ * @property {string} [method=get] - The HTTP method to use for the request *(HTTP loader only)*
+ * @property {PrepareRequestCallback} [prepareRequest] - The callback used to prepare the request *(HTTP loader only)*
+ * @property {ProcessResponseCallback} [processContent] - The callback used to process the response
+ */
+
+/**
  * Callback used to provide access to altering a remote request prior to the request being made.
  *
  * @typedef {function} PrepareRequestCallback
@@ -62,7 +67,7 @@ function getScheme (location) {
  * @param {string} location - The location being retrieved
  * @param {function} callback - First callback
  *
- * @alias module:PathLoader~PrepareRequestCallback
+ * @alias PrepareRequestCallback
  */
 
  /**
@@ -77,7 +82,7 @@ function getScheme (location) {
   *
   * @returns {*} the result of processing the responsexs
   *
-  * @alias module:PathLoader~ProcessResponseCallback
+  * @alias ProcessResponseCallback
   */
 
 function getLoader (location) {
@@ -98,14 +103,7 @@ function getLoader (location) {
 /**
  * Loads a document at the provided location and returns a JavaScript object representation.
  *
- * @param {object} location - The location to the document
- * @param {object} [options] - The options
- * @param {string} [options.encoding='utf-8'] - The encoding to use when loading the file *(File loader only)*
- * @param {string} [options.method=get] - The HTTP method to use for the request *(HTTP loader only)*
- * @param {module:PathLoader~PrepareRequestCallback} [options.prepareRequest] - The callback used to prepare the request
- * *(HTTP loader only)*
- * @param {module:PathLoader~ProcessResponseCallback} [options.processContent] - The callback used to process the
- * response
+ * @param {LoadOptions} location - The location to the document
  *
  * @returns {Promise} Always returns a promise even if there is a callback provided
  *

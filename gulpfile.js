@@ -91,6 +91,27 @@ gulp.task('clean', function (done) {
   ], done);
 });
 
+gulp.task('docs', function () {
+  return gulp.src([
+    './index.js'
+  ])
+    .pipe($.concat('API.md'))
+    .pipe($.jsdoc2MD())
+    .pipe(gulp.dest('docs'));
+});
+
+gulp.task('docs-ts', function (cb) {
+  gulp.src([
+    './index.js'
+  ])
+    .pipe($.jsdoc3({
+      opts: {
+        destination: 'index.d.ts',
+        template: 'node_modules/@otris/jsdoc-tsd'
+      }
+    }, cb));
+});
+
 gulp.task('lint', function () {
   return gulp.src([
       'lib/**/*.js',
@@ -211,13 +232,4 @@ gulp.task('test', function (cb) {
   runSequence('test-node', 'test-browser', cb);
 });
 
-gulp.task('docs', function () {
-  return gulp.src([
-    './index.js'
-  ])
-    .pipe($.concat('API.md'))
-    .pipe($.jsdoc2MD())
-    .pipe(gulp.dest('docs'));
-});
-
-gulp.task('default', ['lint', 'nsp', 'browserify', 'test', 'docs']);
+gulp.task('default', ['lint', 'nsp', 'browserify', 'test', 'docs', 'docs-ts']);
