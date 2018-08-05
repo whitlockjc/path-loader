@@ -61,19 +61,17 @@ function getScheme (location) {
 /**
  * Callback used to provide access to altering a remote request prior to the request being made.
  *
- * @typedef {function} PrepareRequestCallback
+ * @callback PrepareRequestCallback
  *
  * @param {object} req - The Superagent request object
  * @param {string} location - The location being retrieved
  * @param {function} callback - First callback
- *
- * @alias PrepareRequestCallback
  */
 
  /**
   * Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
   *
-  * @typedef {function} ProcessResponseCallback
+  * @callback ProcessResponseCallback
   *
   * @param {object} res - The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent
   * object in that it will have a `text` property whose value is the raw string value being processed.  This was done
@@ -81,8 +79,6 @@ function getScheme (location) {
   * @param {function} callback - Error-first callback
   *
   * @returns {*} the result of processing the responsexs
-  *
-  * @alias ProcessResponseCallback
   */
 
 function getLoader (location) {
