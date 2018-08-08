@@ -1,47 +1,53 @@
 /**
- * Options used when loading a path.
+ * Utility that provides a single API for loading the content of a path/URL.
  */
-declare interface LoadOptions {
+declare module 'path-loader' {
     /**
-     * The encoding to use when loading the file *(File loader only)*
+     * Options used when loading a path.
      */
-    encoding?: string;
+    declare interface LoadOptions {
+        /**
+         * The encoding to use when loading the file *(File loader only)*
+         */
+        encoding?: string;
+        /**
+         * The HTTP method to use for the request *(HTTP loader only)*
+         */
+        method?: string;
+        /**
+         * The callback used to prepare the request *(HTTP loader only)*
+         */
+        prepareRequest?: PrepareRequestCallback;
+        /**
+         * The callback used to process the response
+         */
+        processContent?: ProcessResponseCallback;
+    }
+
     /**
-     * The HTTP method to use for the request *(HTTP loader only)*
+     * Callback used to provide access to altering a remote request prior to the request being made.
+     * @param req - The Superagent request object
+     * @param location - The location being retrieved
+     * @param callback - First callback
      */
-    method?: string;
+    declare type PrepareRequestCallback = (req: object, location: string, callback: Function)=>void;
+
     /**
-     * The callback used to prepare the request *(HTTP loader only)*
+     * Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
+     * @param res - The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent
+     *        object in that it will have a `text` property whose value is the raw string value being processed.  This was done
+     *        for consistency.)*
+     * @param callback - Error-first callback
+     * @returns the result of processing the responsexs
      */
-    prepareRequest?: PrepareRequestCallback;
+    declare type ProcessResponseCallback = (res: object, callback: Function)=>any;
+
     /**
-     * The callback used to process the response
+     * Loads a document at the provided location and returns a JavaScript object representation.
+     * @param location - The location to the document
+     * @returns Always returns a promise even if there is a callback provided
      */
-    processContent?: ProcessResponseCallback;
+    export function load(location: LoadOptions): Promise<any>;
+
 }
-
-/**
- * Callback used to provide access to altering a remote request prior to the request being made.
- * @param req - The Superagent request object
- * @param location - The location being retrieved
- * @param callback - First callback
- */
-declare type PrepareRequestCallback = (req: object, location: string, callback: Function)=>void;
-
-/**
- * Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
- * @param res - The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent
- *        object in that it will have a `text` property whose value is the raw string value being processed.  This was done
- *        for consistency.)*
- * @param callback - Error-first callback
- * @returns the result of processing the responsexs
- */
-declare type ProcessResponseCallback = (res: object, callback: Function)=>any;
-
-/**
- * Loads a document at the provided location and returns a JavaScript object representation.
- * @param location - The location to the document
- * @returns Always returns a promise even if there is a callback provided
- */
-declare function load(location: LoadOptions): Promise;
 

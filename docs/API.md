@@ -1,36 +1,28 @@
-## Functions
+<a name="module_path-loader"></a>
 
-<dl>
-<dt><a href="#load">load(location)</a> ⇒ <code>Promise</code></dt>
-<dd><p>Loads a document at the provided location and returns a JavaScript object representation.</p>
-</dd>
-</dl>
+## path-loader
+Utility that provides a single API for loading the content of a path/URL.
 
-## Typedefs
 
-<dl>
-<dt><a href="#LoadOptions">LoadOptions</a> : <code>object</code></dt>
-<dd><p>Options used when loading a path.</p>
-</dd>
-<dt><a href="#PrepareRequestCallback">PrepareRequestCallback</a> : <code>function</code></dt>
-<dd><p>Callback used to provide access to altering a remote request prior to the request being made.</p>
-</dd>
-<dt><a href="#ProcessResponseCallback">ProcessResponseCallback</a> ⇒ <code>*</code></dt>
-<dd><p>Callback used to provide access to processing the raw response of the request being made. <em>(HTTP loader only)</em></p>
-</dd>
-</dl>
+* [path-loader](#module_path-loader)
+    * _static_
+        * [.load(location)](#module_path-loader.load) ⇒ <code>Promise.&lt;\*&gt;</code>
+    * _inner_
+        * [~LoadOptions](#module_path-loader..LoadOptions) : <code>object</code>
+        * [~PrepareRequestCallback](#module_path-loader..PrepareRequestCallback) : <code>function</code>
+        * [~ProcessResponseCallback](#module_path-loader..ProcessResponseCallback) ⇒ <code>\*</code>
 
-<a name="load"></a>
+<a name="module_path-loader.load"></a>
 
-## load(location) ⇒ <code>Promise</code>
+### path-loader.load(location) ⇒ <code>Promise.&lt;\*&gt;</code>
 Loads a document at the provided location and returns a JavaScript object representation.
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - Always returns a promise even if there is a callback provided  
+**Kind**: static method of <code>[path-loader](#module_path-loader)</code>  
+**Returns**: <code>Promise.&lt;\*&gt;</code> - Always returns a promise even if there is a callback provided  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| location | <code>[LoadOptions](#LoadOptions)</code> | The location to the document |
+| location | <code>LoadOptions</code> | The location to the document |
 
 **Example**  
 ```js
@@ -92,27 +84,27 @@ PathLoader
     console.error(err.stack);
   });
 ```
-<a name="LoadOptions"></a>
+<a name="module_path-loader..LoadOptions"></a>
 
-## LoadOptions : <code>object</code>
+### path-loader~LoadOptions : <code>object</code>
 Options used when loading a path.
 
-**Kind**: global typedef  
+**Kind**: inner typedef of <code>[path-loader](#module_path-loader)</code>  
 **Properties**
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | encoding | <code>string</code> | <code>&quot;&#x27;utf-8&#x27;&quot;</code> | The encoding to use when loading the file *(File loader only)* |
 | method | <code>string</code> | <code>&quot;get&quot;</code> | The HTTP method to use for the request *(HTTP loader only)* |
-| prepareRequest | <code>[PrepareRequestCallback](#PrepareRequestCallback)</code> |  | The callback used to prepare the request *(HTTP loader only)* |
-| processContent | <code>[ProcessResponseCallback](#ProcessResponseCallback)</code> |  | The callback used to process the response |
+| prepareRequest | <code>PrepareRequestCallback</code> |  | The callback used to prepare the request *(HTTP loader only)* |
+| processContent | <code>ProcessResponseCallback</code> |  | The callback used to process the response |
 
-<a name="PrepareRequestCallback"></a>
+<a name="module_path-loader..PrepareRequestCallback"></a>
 
-## PrepareRequestCallback : <code>function</code>
+### path-loader~PrepareRequestCallback : <code>function</code>
 Callback used to provide access to altering a remote request prior to the request being made.
 
-**Kind**: global typedef  
+**Kind**: inner typedef of <code>[path-loader](#module_path-loader)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -120,12 +112,12 @@ Callback used to provide access to altering a remote request prior to the reques
 | location | <code>string</code> | The location being retrieved |
 | callback | <code>function</code> | First callback |
 
-<a name="ProcessResponseCallback"></a>
+<a name="module_path-loader..ProcessResponseCallback"></a>
 
-## ProcessResponseCallback ⇒ <code>\*</code>
+### path-loader~ProcessResponseCallback ⇒ <code>\*</code>
 Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
 
-**Kind**: global typedef  
+**Kind**: inner typedef of <code>[path-loader](#module_path-loader)</code>  
 **Returns**: <code>\*</code> - the result of processing the responsexs  
 
 | Param | Type | Description |

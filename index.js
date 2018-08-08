@@ -48,6 +48,12 @@ function getScheme (location) {
 }
 
 /**
+ * Utility that provides a single API for loading the content of a path/URL.
+ *
+ * @module path-loader
+ */
+
+/**
  * Options used when loading a path.
  *
  * @typedef {object} LoadOptions
@@ -101,7 +107,7 @@ function getLoader (location) {
  *
  * @param {LoadOptions} location - The location to the document
  *
- * @returns {Promise} Always returns a promise even if there is a callback provided
+ * @returns {Promise<*>} Always returns a promise even if there is a callback provided
  *
  * @example
  * // Example using Promises
