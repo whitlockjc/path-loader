@@ -1,5 +1,9 @@
 ## Release Notes
 
+### v1.0.6 (2018-08-08)
+
+* Fix TypeScript declarations
+
 ### v1.0.5 (2018-08-04)
 
 * Fix issue when working with buffered output _(Issue #17)_
