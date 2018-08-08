@@ -53,40 +53,6 @@ function getScheme (location) {
  * @module path-loader
  */
 
-/**
- * Options used when loading a path.
- *
- * @typedef {object} LoadOptions
- *
- * @property {string} [encoding='utf-8'] - The encoding to use when loading the file *(File loader only)*
- * @property {string} [method=get] - The HTTP method to use for the request *(HTTP loader only)*
- * @property {PrepareRequestCallback} [prepareRequest] - The callback used to prepare the request *(HTTP loader only)*
- * @property {ProcessResponseCallback} [processContent] - The callback used to process the response
- */
-
-/**
- * Callback used to provide access to altering a remote request prior to the request being made.
- *
- * @callback PrepareRequestCallback
- *
- * @param {object} req - The Superagent request object
- * @param {string} location - The location being retrieved
- * @param {function} callback - First callback
- */
-
- /**
-  * Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
-  *
-  * @callback ProcessResponseCallback
-  *
-  * @param {object} res - The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent
-  * object in that it will have a `text` property whose value is the raw string value being processed.  This was done
-  * for consistency.)*
-  * @param {function} callback - Error-first callback
-  *
-  * @returns {*} the result of processing the responsexs
-  */
-
 function getLoader (location) {
   var scheme = getScheme(location);
   var loader = supportedLoaders[scheme];
@@ -105,7 +71,7 @@ function getLoader (location) {
 /**
  * Loads a document at the provided location and returns a JavaScript object representation.
  *
- * @param {LoadOptions} location - The location to the document
+ * @param {module:path-loader~LoadOptions} location - The location to the document
  *
  * @returns {Promise<*>} Always returns a promise even if there is a callback provided
  *

@@ -22,7 +22,7 @@ Loads a document at the provided location and returns a JavaScript object repres
 
 | Param | Type | Description |
 | --- | --- | --- |
-| location | <code>LoadOptions</code> | The location to the document |
+| location | <code>[LoadOptions](#module_path-loader..LoadOptions)</code> | The location to the document |
 
 **Example**  
 ```js
@@ -96,8 +96,8 @@ Options used when loading a path.
 | --- | --- | --- | --- |
 | encoding | <code>string</code> | <code>&quot;&#x27;utf-8&#x27;&quot;</code> | The encoding to use when loading the file *(File loader only)* |
 | method | <code>string</code> | <code>&quot;get&quot;</code> | The HTTP method to use for the request *(HTTP loader only)* |
-| prepareRequest | <code>PrepareRequestCallback</code> |  | The callback used to prepare the request *(HTTP loader only)* |
-| processContent | <code>ProcessResponseCallback</code> |  | The callback used to process the response |
+| prepareRequest | <code>[PrepareRequestCallback](#module_path-loader..PrepareRequestCallback)</code> |  | The callback used to prepare the request *(HTTP loader only)* |
+| processContent | <code>[ProcessResponseCallback](#module_path-loader..ProcessResponseCallback)</code> |  | The callback used to process the response |
 
 <a name="module_path-loader..PrepareRequestCallback"></a>
 
