@@ -5,12 +5,10 @@ Utility that provides a single API for loading the content of a path/URL.
 
 
 * [path-loader](#module_path-loader)
-    * _static_
-        * [.load(location)](#module_path-loader.load) ⇒ <code>Promise.&lt;\*&gt;</code>
-    * _inner_
-        * [~LoadOptions](#module_path-loader..LoadOptions) : <code>object</code>
-        * [~PrepareRequestCallback](#module_path-loader..PrepareRequestCallback) : <code>function</code>
-        * [~ProcessResponseCallback](#module_path-loader..ProcessResponseCallback) ⇒ <code>\*</code>
+    * [.load(location)](#module_path-loader.load) ⇒ <code>Promise.&lt;\*&gt;</code>
+    * [.LoadOptions](#module_path-loader.LoadOptions) : <code>object</code>
+    * [.PrepareRequestCallback](#module_path-loader.PrepareRequestCallback) : <code>function</code>
+    * [.ProcessResponseCallback](#module_path-loader.ProcessResponseCallback) ⇒ <code>\*</code>
 
 <a name="module_path-loader.load"></a>
 
@@ -22,7 +20,7 @@ Loads a document at the provided location and returns a JavaScript object repres
 
 | Param | Type | Description |
 | --- | --- | --- |
-| location | <code>[LoadOptions](#module_path-loader..LoadOptions)</code> | The location to the document |
+| location | <code>module:path-loader~LoadOptions</code> | The location to the document |
 
 **Example**  
 ```js
@@ -84,27 +82,27 @@ PathLoader
     console.error(err.stack);
   });
 ```
-<a name="module_path-loader..LoadOptions"></a>
+<a name="module_path-loader.LoadOptions"></a>
 
-### path-loader~LoadOptions : <code>object</code>
+### path-loader.LoadOptions : <code>object</code>
 Options used when loading a path.
 
-**Kind**: inner typedef of <code>[path-loader](#module_path-loader)</code>  
+**Kind**: static typedef of <code>[path-loader](#module_path-loader)</code>  
 **Properties**
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | encoding | <code>string</code> | <code>&quot;&#x27;utf-8&#x27;&quot;</code> | The encoding to use when loading the file *(File loader only)* |
 | method | <code>string</code> | <code>&quot;get&quot;</code> | The HTTP method to use for the request *(HTTP loader only)* |
-| prepareRequest | <code>[PrepareRequestCallback](#module_path-loader..PrepareRequestCallback)</code> |  | The callback used to prepare the request *(HTTP loader only)* |
-| processContent | <code>[ProcessResponseCallback](#module_path-loader..ProcessResponseCallback)</code> |  | The callback used to process the response |
+| prepareRequest | <code>module:path-loader~PrepareRequestCallback</code> |  | The callback used to prepare the request *(HTTP loader only)* |
+| processContent | <code>module:path-loader~ProcessResponseCallback</code> |  | The callback used to process the response |
 
-<a name="module_path-loader..PrepareRequestCallback"></a>
+<a name="module_path-loader.PrepareRequestCallback"></a>
 
-### path-loader~PrepareRequestCallback : <code>function</code>
+### path-loader.PrepareRequestCallback : <code>function</code>
 Callback used to provide access to altering a remote request prior to the request being made.
 
-**Kind**: inner typedef of <code>[path-loader](#module_path-loader)</code>  
+**Kind**: static typedef of <code>[path-loader](#module_path-loader)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -112,13 +110,13 @@ Callback used to provide access to altering a remote request prior to the reques
 | location | <code>string</code> | The location being retrieved |
 | callback | <code>function</code> | First callback |
 
-<a name="module_path-loader..ProcessResponseCallback"></a>
+<a name="module_path-loader.ProcessResponseCallback"></a>
 
-### path-loader~ProcessResponseCallback ⇒ <code>\*</code>
+### path-loader.ProcessResponseCallback ⇒ <code>\*</code>
 Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
 
-**Kind**: inner typedef of <code>[path-loader](#module_path-loader)</code>  
-**Returns**: <code>\*</code> - the result of processing the responsexs  
+**Kind**: static typedef of <code>[path-loader](#module_path-loader)</code>  
+**Returns**: <code>\*</code> - the result of processing the responses  
 
 | Param | Type | Description |
 | --- | --- | --- |

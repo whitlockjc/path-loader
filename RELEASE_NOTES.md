@@ -1,5 +1,9 @@
 ## Release Notes
 
+### v1.0.7 (2018-08-26)
+
+* Another fix for TypeScript declarations
+
 ### v1.0.6 (2018-08-08)
 
 * Fix TypeScript declarations
