@@ -1,6 +1,6 @@
 {
   "name": "path-loader",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Utility that provides a single API for loading the content of a path/URL.",
   "main": "index.js",
   "scripts": {
