@@ -1,7 +1,7 @@
 {
   "name": "path-loader",
   "main": "browser/path-loader.js",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "homepage": "https://github.com/whitlockjc/path-loader",
   "authors": [
     "Jeremy Whitlock <jwhitlock@apache.org>"
