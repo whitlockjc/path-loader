@@ -7,12 +7,12 @@ declare module 'path-loader' {
      * @param location - The location to the document
      * @returns Always returns a promise even if there is a callback provided
      */
-    export function load(location: LoadOptions): Promise.<any>;
+    export function load(location: LoadOptions): Promise<any>;
 
     /**
      * Options used when loading a path.
      */
-    declare interface LoadOptions {
+    interface LoadOptions {
         /**
          * The encoding to use when loading the file *(File loader only)*
          */

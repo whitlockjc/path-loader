@@ -33,7 +33,7 @@
     "./lib/loaders/file.js": "./lib/loaders/file-browser.js"
   },
   "devDependencies": {
-    "@otris/jsdoc-tsd": "^1.0.0",
+    "@otris/jsdoc-tsd": "^1.0.4",
     "basic-auth": "^2.0.0",
     "brfs": "~1.4.3",
     "browserify": "~14.4.0",
