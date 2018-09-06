@@ -71,7 +71,8 @@ function getLoader (location) {
 /**
  * Loads a document at the provided location and returns a JavaScript object representation.
  *
- * @param {module:path-loader~LoadOptions} location - The location to the document
+ * @param {string} location - The location to the document
+ * @param {module:path-loader~LoadOptions} [options] - The loader options
  *
  * @returns {Promise<*>} Always returns a promise even if there is a callback provided
  *

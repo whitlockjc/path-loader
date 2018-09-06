@@ -5,9 +5,10 @@ declare module 'path-loader' {
     /**
      * Loads a document at the provided location and returns a JavaScript object representation.
      * @param location - The location to the document
+     * @param options - The loader options
      * @returns Always returns a promise even if there is a callback provided
      */
-    export function load(location: LoadOptions): Promise<any>;
+    export function load(location: string, options?: LoadOptions): Promise<any>;
 
     /**
      * Options used when loading a path.

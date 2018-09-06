@@ -5,14 +5,14 @@ Utility that provides a single API for loading the content of a path/URL.
 
 
 * [path-loader](#module_path-loader)
-    * [.load(location)](#module_path-loader.load) ⇒ <code>Promise.&lt;\*&gt;</code>
+    * [.load(location, [options])](#module_path-loader.load) ⇒ <code>Promise.&lt;\*&gt;</code>
     * [.LoadOptions](#module_path-loader.LoadOptions) : <code>object</code>
     * [.PrepareRequestCallback](#module_path-loader.PrepareRequestCallback) : <code>function</code>
     * [.ProcessResponseCallback](#module_path-loader.ProcessResponseCallback) ⇒ <code>\*</code>
 
 <a name="module_path-loader.load"></a>
 
-### path-loader.load(location) ⇒ <code>Promise.&lt;\*&gt;</code>
+### path-loader.load(location, [options]) ⇒ <code>Promise.&lt;\*&gt;</code>
 Loads a document at the provided location and returns a JavaScript object representation.
 
 **Kind**: static method of <code>[path-loader](#module_path-loader)</code>  
@@ -20,7 +20,8 @@ Loads a document at the provided location and returns a JavaScript object repres
 
 | Param | Type | Description |
 | --- | --- | --- |
-| location | <code>module:path-loader~LoadOptions</code> | The location to the document |
+| location | <code>string</code> | The location to the document |
+| [options] | <code>module:path-loader~LoadOptions</code> | The loader options |
 
 **Example**  
 ```js

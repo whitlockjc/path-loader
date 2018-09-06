@@ -1,5 +1,9 @@
 ## Release Notes
 
+### v1.0.9 (2018-09-06)
+
+* Fix `PathLoader#load` documentation _(Issue #20)_
+
 ### v1.0.8 (2018-08-31)
 
 * Another fix for TypeScript declarations
