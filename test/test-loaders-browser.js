@@ -204,6 +204,22 @@ describe('path-loader (browser loaders)', function () {
           })
           .then(done, done);
       });
+
+      it('should support options.processContent with location context', function (done) {
+        pathLoader
+          .load(baseLocation + 'project.json', {
+            processContent: function (res, callback, location) {
+              callback(undefined, location);
+            }
+          })
+          .then(function (locationJson) {
+            var expected = { requested: baseLocation + 'project.json', resolved: baseLocation + 'project.json' };
+            assert.deepEqual(expected, locationJson);
+          }, function (err) {
+            throw err;
+          })
+          .then(done, done);
+      });
     });
 
     // Since http and https have the same implementation, no need to test them individually

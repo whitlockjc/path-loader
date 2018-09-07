@@ -162,28 +162,38 @@ module.exports.load = function (location, options) {
     .then(function () {
       return new Promise(function (resolve, reject) {
         var loader = getLoader(location);
+        var resolvedLocation = loader.resolveLocation(location);
 
-        loader.load(location, options || {}, function (err, document) {
+        loader.load(resolvedLocation.resolved, options || {}, function (err, document) {
           if (err) {
             reject(err);
           } else {
-            resolve(document);
+            resolve({
+              document: document,
+              location: resolvedLocation
+            });
           }
         });
       });
     })
-    .then(function (res) {
+    .then(function (response) {
+      var res = response.document;
       if (options.processContent) {
         return new Promise(function (resolve, reject) {
           // For consistency between file and http, always send an object with a 'text' property containing the raw
           // string value being processed.
+
+          // Send location as 3rd parameter to processContent.
+          // This allows "newer" content handlers to process the content conditionally (based on location)
+          // while keeping old handlers to be backward compatible.
           options.processContent(typeof res === 'object' ? res : {text: res}, function (err, processed) {
             if (err) {
               reject(err);
             } else {
               resolve(processed);
             }
-          });
+          },
+          response.location);
         });
       } else {
         // If there was no content processor, we will assume that for all objects that it is a Superagent response

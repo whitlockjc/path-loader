@@ -137,6 +137,22 @@ describe('path-loader (node.js loaders)', function () {
           })
           .then(done, done);
       });
+
+      it('should support options.processContent with location context', function (done) {
+        pathLoader
+          .load('./test/browser/project.json', {
+            processContent: function (res, callback, location) {
+              callback(undefined, location);
+            }
+          })
+          .then(function (locationJson) {
+            var expected = { requested: './test/browser/project.json', resolved: path.resolve(process.cwd(), './test/browser/project.json') };
+            assert.deepEqual(expected, locationJson);
+          }, function (err) {
+            throw err;
+          })
+          .then(done, done);
+      });
     });
 
     describe('http', function () {
@@ -267,6 +283,22 @@ describe('path-loader (node.js loaders)', function () {
           })
           .then(function (json) {
             assert.deepEqual(projectJson, json);
+          }, function (err) {
+            throw err;
+          })
+          .then(done, done);
+      });
+
+      it('should support options.processContent with location context', function (done) {
+        pathLoader
+          .load(projectJsonLocation, {
+            processContent: function (res, callback, location) {
+              callback(undefined, location);
+            }
+          })
+          .then(function (locationJson) {
+            var expected = { requested: projectJsonLocation, resolved: projectJsonLocation };
+            assert.deepEqual(expected, locationJson);
           }, function (err) {
             throw err;
           })
