@@ -140,7 +140,10 @@ gulp.task('test-node', ['pre-test'], function () {
     '!test/browser/test-*.js',
     '!test/test-loaders-browser.js'
   ])
-    .pipe($.mocha({reporter: 'spec'}))
+    .pipe($.mocha({
+      reporter: 'spec',
+      timeout: 5000
+    }))
     .on('end', function () {
       displayCoverageReport(!runningAllTests);
     });
