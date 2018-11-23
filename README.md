@@ -28,20 +28,10 @@ path-loader is available for both Node.js and the browser.  Installation instruc
 
 ### Browser
 
-Installation for browser applications can be done via [Bower][bower] or by downloading a standalone binary.
+path-loader binaries for the browser are available in the `dist/` directory:
 
-#### Using Bower
-
-```
-bower install path-loader --save
-```
-
-#### Standalone Binaries
-
-The standalone binaries come in two flavors:
-
-* [path-loader.js](https://raw.github.com/whitlockjc/path-loader/master/browser/path-loader.js): _112kb_, full source  and source maps
-* [path-loader-min.js](https://raw.github.com/whitlockjc/path-loader/master/browser/path-loader-min.js): _16kb_, minified, compressed and no sourcemap
+* [path-loader.js](https://raw.github.com/whitlockjc/path-loader/master/dist/path-loader.js): _228kb_, full source  and source maps
+* [path-loader-min.js](https://raw.github.com/whitlockjc/path-loader/master/dist/path-loader-min.js): _28kb_, minified, compressed and no sourcemap
 
 ### Node.js
 
@@ -55,5 +45,17 @@ npm install path-loader --save
 
 The documentation for this project can be found here: https://github.com/whitlockjc/path-loader/blob/master/docs/README.md
 
-[bower]: http://bower.io/
-[npm]: https://www.npmjs.com/
+The path-loader project's API documentation can be found here: https://github.com/whitlockjc/path-loader/blob/master/docs/API.md
+
+## Dependencies
+
+Below is the list of projects being used by path-loader and the purpose(s) they are used for:
+
+* [native-promise-only][native-promise-only]: Used to shim in [Promises][promises] support
+* [superagent][superagent]: AJAX for the browser and Node.js
+
+[native-promise-only]: https://www.npmjs.com/package/native-promise-only
+[npm]: https://www.npmjs.org/
+[promises]: https://www.promisejs.org/
+[superagent]: https://github.com/visionmedia/superagent
+

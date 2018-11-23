@@ -8,28 +8,39 @@ module.exports = function (config) {
   console.log();
 
   config.set({
-    basePath: '.',
-    frameworks: ['mocha'],
-    files: [
-      {pattern: 'path-loader.js', watch: false, included: true},
-      {pattern: 'test-browser.js', watch: false, included: true},
-      {pattern: '**/*.json', watched: false, included: false, served: true}
-    ],
+    autoWatch: false,
+    basePath: '..',
+    browsers: ['PhantomJS'],
+    reporters: ['mocha'],
+    singleRun: true,
     client: {
       mocha: {
         reporter: 'html',
+        timeout: 5000,
         ui: 'bdd'
       }
     },
+    files: [
+      {pattern: 'test-general.js', watched: false},
+      {pattern: 'test-loaders-browser.js', watched: false},
+      {pattern: 'browser/*.json', watched: false, included: false}
+    ],
+    frameworks: ['mocha'],
     plugins: [
       'karma-mocha',
       'karma-mocha-reporter',
-      'karma-phantomjs-launcher'
+      'karma-phantomjs-launcher',
+      'karma-webpack'
     ],
-    browsers: ['PhantomJS'],
-    reporters: ['mocha'],
-    colors: true,
-    autoWatch: false,
-    singleRun: true
+    preprocessors: {
+      'test-general.js': ['webpack'],
+      'test-loaders-browser.js': ['webpack']
+    },
+    webpack: {
+      mode: 'development'
+    },
+    webpackMiddleware: {
+      stats: 'errors-only'
+    }
   });
 };

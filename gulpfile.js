@@ -31,16 +31,15 @@ var $ = require('gulp-load-plugins')({
     'gulp-jsdoc-to-markdown': 'jsdoc2MD'
   }
 });
-var browserify = require('browserify');
-var buffer = require('vinyl-buffer');
 var del = require('del');
-var fs = require('fs');
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var KarmaServer = require('karma').Server;
 var path = require('path');
 var runSequence = require('run-sequence');
-var source = require('vinyl-source-stream');
 var testHelpers = require('./test/helpers');
+var webpack = require('webpack');
+var webpackConfig = require('./webpack.config');
 
 var runningAllTests = false;
 
@@ -56,39 +55,21 @@ function displayCoverageReport (display) {
   }
 }
 
-gulp.task('browserify', function (cb) {
-  function browserifyBuild (useDebug) {
-    return function () {
-      return new Promise(function (resolve, reject) {
-        var b = browserify('./index.js', {
-          debug: useDebug,
-          standalone: 'PathLoader'
-        });
-
-        b.bundle()
-          .pipe(source('path-loader' + (!useDebug ? '-min' : '') + '.js'))
-          .pipe($.if(!useDebug, buffer()))
-          .pipe($.if(!useDebug, $.uglify()))
-          .pipe(gulp.dest('browser/'))
-          .on('error', reject)
-          .on('end', resolve);
-      });
-    };
-  }
-
-  Promise.resolve()
-    // Standalone build with source maps and complete source
-    .then(browserifyBuild(true))
-    // Standalone build minified and without source maps
-    .then(browserifyBuild(false))
-    .then(cb, cb);
-});
-
 gulp.task('clean', function (done) {
   del([
     'bower_components',
     'coverage'
   ], done);
+});
+
+gulp.task('dist', function (done) {
+	webpack(webpackConfig, function (err, stats) {
+		if (err) throw new gutil.PluginError('webpack', err);
+		gutil.log('[webpack]', 'Bundles generated:\n' + stats.toString('minimal').split('\n').map(function (line) {
+      return '  ' + line.replace('Child ', 'dist/').replace(':', '.js:');
+    }).join('\n'));
+		done();
+	});
 });
 
 gulp.task('docs', function () {
@@ -165,17 +146,10 @@ gulp.task('test-node', ['pre-test'], function () {
     });
 });
 
-gulp.task('test-browser', ['browserify'], function (cb) {
-  var basePath = './test/browser/';
+gulp.task('test-browser', function (done) {
   var httpServer;
 
   function cleanUp () {
-    // Clean up just in case
-    del.sync([
-      basePath + 'path-loader.js',
-      basePath + 'test-browser.js'
-    ]);
-
     if (httpServer) {
       httpServer.close();
     }
@@ -190,32 +164,6 @@ gulp.task('test-browser', ['browserify'], function (cb) {
   }
 
   Promise.resolve()
-    .then(cleanUp)
-    .then(function () {
-      // Copy the browser build of path-loader to the test directory
-      fs.createReadStream('./browser/path-loader.js')
-        .pipe(fs.createWriteStream(basePath + 'path-loader.js'));
-
-      return new Promise(function (resolve, reject) {
-        var b = browserify([
-          './test/test-general.js',
-          './test/test-loaders-browser.js'
-        ], {
-          debug: true
-        });
-
-        b.transform('brfs')
-          .bundle()
-          .pipe(source('test-browser.js'))
-          .pipe(gulp.dest(basePath))
-          .on('error', function (err) {
-            reject(err);
-          })
-          .on('end', function () {
-            resolve();
-        });
-      });
-    })
     .then(function () {
       httpServer = testHelpers.createServer(require('http')).listen(44444);
     })
@@ -234,15 +182,18 @@ gulp.task('test-browser', ['browserify'], function (cb) {
       });
     })
     .then(finisher, finisher)
-    .then(cb, cb);
+    .then(done, done);
 });
 
-gulp.task('test', function (cb) {
+gulp.task('test', function (done) {
   runningAllTests = true;
 
   // Done this way to ensure that test-node runs prior to test-browser.  Since both of those tasks are independent,
   // doing this 'The Gulp Way' isn't feasible.
-  runSequence('test-node', 'test-browser', cb);
+  runSequence('test-node', 'test-browser', done);
 });
 
-gulp.task('default', ['lint', 'nsp', 'browserify', 'test', 'docs', 'docs-ts']);
+gulp.task('default', function (done) {
+  // Done this way to run in series until we upgrade to Gulp 4.x+
+  runSequence('lint', 'nsp', 'test', 'dist', 'docs', 'docs-ts', done);
+});

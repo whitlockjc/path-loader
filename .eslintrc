@@ -7,6 +7,9 @@
   env:
     node: true
 
+  globals:
+    Promise: true
+
   rules:
     array-bracket-spacing: [2, "never"]
     brace-style: [2, "1tbs"]

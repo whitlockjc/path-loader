@@ -64,7 +64,7 @@ describe('path-loader (browser loaders)', function () {
 
       it('relative existing file (without dot)', function (done) {
         pathLoader
-          .load('base/project.json')
+          .load('base/browser/project.json')
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -74,7 +74,7 @@ describe('path-loader (browser loaders)', function () {
 
       it('relative existing file (with dot)', function (done) {
         pathLoader
-          .load('./base/project.json')
+          .load('./base/browser/project.json')
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
