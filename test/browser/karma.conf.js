@@ -37,7 +37,20 @@ module.exports = function (config) {
       'test-loaders-browser.js': ['webpack']
     },
     webpack: {
-      mode: 'development'
+      mode: 'development',
+      module: {
+        rules: [
+          {
+            test: /\.js$/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: ['es2015']
+              }
+            }
+          }
+        ]
+      },
     },
     webpackMiddleware: {
       stats: 'errors-only'

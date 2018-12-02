@@ -9,8 +9,8 @@ path-loader is available for both Node.js and the browser.  Installation instruc
 
 path-loader binaries for the browser are available in the `dist/` directory:
 
-* [path-loader.js](https://raw.github.com/whitlockjc/path-loader/master/dist/path-loader.js): _228kb_, full source  and source maps
-* [path-loader-min.js](https://raw.github.com/whitlockjc/path-loader/master/dist/path-loader-min.js): _28kb_, minified, compressed and no sourcemap
+* [path-loader.js](https://raw.github.com/whitlockjc/path-loader/master/dist/path-loader.js): _288kb_, full source  and source maps
+* [path-loader-min.js](https://raw.github.com/whitlockjc/path-loader/master/dist/path-loader-min.js): _32kb_, minified, compressed and no sourcemap
 
 ### Node.js
 

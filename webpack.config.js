@@ -6,6 +6,19 @@ module.exports = [{
   devtool: 'inline-source-map',
   entry: './index.js',
   mode: 'development',
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['es2015']
+          }
+        }
+      }
+    ]
+  },
   name: 'path-loader',
   optimization: {
     minimize: false
@@ -18,6 +31,19 @@ module.exports = [{
 }, {
   entry: './index.js',
   mode: 'production',
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['es2015']
+          }
+        }
+      }
+    ]
+  },
   name: 'path-loader-min',
   optimization: {
     minimize: true
