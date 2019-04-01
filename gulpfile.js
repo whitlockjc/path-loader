@@ -118,12 +118,6 @@ gulp.task('lint', function () {
     .pipe($.eslint.failAfterError());
 });
 
-gulp.task('nsp', function (cb) {
-  $.nsp({
-    package: path.join(__dirname, 'package.json')
-  }, cb);
-});
-
 gulp.task('pre-test', function () {
   return gulp.src([
     'index.js',
@@ -198,5 +192,5 @@ gulp.task('test', function (done) {
 
 gulp.task('default', function (done) {
   // Done this way to run in series until we upgrade to Gulp 4.x+
-  runSequence('lint', 'nsp', 'test', 'dist', 'docs', 'docs-ts', done);
+  runSequence('lint', 'test', 'dist', 'docs', 'docs-ts', done);
 });
