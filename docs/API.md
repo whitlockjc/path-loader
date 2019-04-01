@@ -121,6 +121,6 @@ Callback used to provide access to processing the raw response of the request be
 
 | Param | Type | Description |
 | --- | --- | --- |
-| res | <code>object</code> | The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent object in that it will have a `text` property whose value is the raw string value being processed.  This was done for consistency.)* |
+| res | <code>object</code> | The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent object in that it will have a `text` property whose value is the raw string value being processed.  This was done for consistency.  There will also be a `location` property containing the location of the path being loaded.)* |
 | callback | <code>function</code> | Error-first callback |
 
