@@ -194,6 +194,8 @@ describe('path-loader (browser loaders)', function () {
         pathLoader
           .load(baseLocation + 'project.json', {
             processContent: function (res, callback) {
+              assert.equal(res.location, baseLocation + 'project.json');
+
               callback(undefined, JSON.parse(res.text));
             }
           })

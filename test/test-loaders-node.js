@@ -127,6 +127,8 @@ describe('path-loader (node.js loaders)', function () {
         pathLoader
           .load('./test/browser/project.json', {
             processContent: function (res, callback) {
+              assert.equal(res.location, './test/browser/project.json');
+
               callback(undefined, JSON.parse(res.text));
             }
           })
@@ -262,6 +264,8 @@ describe('path-loader (node.js loaders)', function () {
         pathLoader
           .load(projectJsonLocation, {
             processContent: function (res, callback) {
+              assert.equal(res.location, projectJsonLocation);
+
               callback(undefined, JSON.parse(res.text));
             }
           })
