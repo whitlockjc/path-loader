@@ -176,8 +176,16 @@ module.exports.load = function (location, options) {
       if (options.processContent) {
         return new Promise(function (resolve, reject) {
           // For consistency between file and http, always send an object with a 'text' property containing the raw
-          // string value being processed.
-          options.processContent(typeof res === 'object' ? res : {text: res}, function (err, processed) {
+          // string value being processed. In addition, inject the location into the res object for processContent.
+          if(typeof res === 'object'){
+            res.location = location
+          } else {
+            res = {
+              location: location,
+              text: res
+            }
+          }
+          options.processContent( res, function (err, processed) {
             if (err) {
               reject(err);
             } else {
