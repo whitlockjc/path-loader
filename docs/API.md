@@ -25,63 +25,19 @@ Loads a document at the provided location and returns a JavaScript object repres
 
 **Example**  
 ```js
-// Example using Promises
-
-PathLoader
-  .load('./package.json')
-  .then(JSON.parse)
-  .then(function (document) {
-    console.log(document.name + ' (' + document.version + '): ' + document.description);
-  }, function (err) {
-    console.error(err.stack);
-  });
+// Example using PromisesPathLoader  .load('./package.json')  .then(JSON.parse)  .then(function (document) {    console.log(document.name + ' (' + document.version + '): ' + document.description);  }, function (err) {    console.error(err.stack);  });
 ```
 **Example**  
 ```js
-// Example using options.prepareRequest to provide authentication details for a remotely secure URL
-
-PathLoader
-  .load('https://api.github.com/repos/whitlockjc/path-loader', {
-    prepareRequest: function (req, callback) {
-      req.auth('my-username', 'my-password');
-      callback(undefined, req);
-    }
-  })
-  .then(JSON.parse)
-  .then(function (document) {
-    console.log(document.full_name + ': ' + document.description);
-  }, function (err) {
-    console.error(err.stack);
-  });
+// Example using options.prepareRequest to provide authentication details for a remotely secure URLPathLoader  .load('https://api.github.com/repos/whitlockjc/path-loader', {    prepareRequest: function (req, callback) {      req.auth('my-username', 'my-password');      callback(undefined, req);    }  })  .then(JSON.parse)  .then(function (document) {    console.log(document.full_name + ': ' + document.description);  }, function (err) {    console.error(err.stack);  });
 ```
 **Example**  
 ```js
-// Example loading a YAML file
-
-PathLoader
-  .load('/Users/not-you/projects/path-loader/.travis.yml')
-  .then(YAML.safeLoad)
-  .then(function (document) {
-    console.log('path-loader uses the', document.language, 'language.');
-  }, function (err) {
-    console.error(err.stack);
-  });
+// Example loading a YAML filePathLoader  .load('/Users/not-you/projects/path-loader/.travis.yml')  .then(YAML.safeLoad)  .then(function (document) {    console.log('path-loader uses the', document.language, 'language.');  }, function (err) {    console.error(err.stack);  });
 ```
 **Example**  
 ```js
-// Example loading a YAML file with options.processContent (Useful if you need information in the raw response)
-
-PathLoader
-  .load('/Users/not-you/projects/path-loader/.travis.yml', {
-    processContent: function (res, callback) {
-      callback(YAML.safeLoad(res.text));
-    }
-  })
-  .then(function (document) {
-    console.log('path-loader uses the', document.language, 'language.');
-  }, function (err) {
-    console.error(err.stack);
-  });
+// Example loading a YAML file with options.processContent (Useful if you need information in the raw response)PathLoader  .load('/Users/not-you/projects/path-loader/.travis.yml', {    processContent: function (res, callback) {      callback(YAML.safeLoad(res.text));    }  })  .then(function (document) {    console.log('path-loader uses the', document.language, 'language.');  }, function (err) {    console.error(err.stack);  });
 ```
 <a name="module_path-loader.LoadOptions"></a>
 
