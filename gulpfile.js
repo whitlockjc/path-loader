@@ -26,17 +26,14 @@
 
 'use strict';
 
-var $ = require('gulp-load-plugins')({
-  rename: {
-    'gulp-jsdoc-to-markdown': 'jsdoc2MD'
-  }
-});
+var $ = require('gulp-load-plugins')();
+var jsdoc2md = require('jsdoc-to-markdown');
+var fs = require('fs');
 var del = require('del');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var KarmaServer = require('karma').Server;
 var path = require('path');
-var runSequence = require('run-sequence');
 var testHelpers = require('./test/helpers');
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.config');
@@ -50,16 +47,16 @@ if (typeof Promise === 'undefined') {
 
 function displayCoverageReport (display) {
   if (display) {
-    gulp.src([])
+    gulp.src('.', {allowEmpty: true})
       .pipe($.istanbul.writeReports());
   }
 }
 
-gulp.task('clean', function (done) {
-  del([
+gulp.task('clean', function () {
+  return del([
     'bower_components',
     'coverage'
-  ], done);
+  ]);
 });
 
 gulp.task('dist', function (done) {
@@ -72,18 +69,23 @@ gulp.task('dist', function (done) {
 	});
 });
 
-gulp.task('docs', function () {
-  return gulp.src([
-    './index.js',
-    './lib/typedefs.js'
-  ])
-    .pipe($.concat('API.md'))
-    .pipe($.jsdoc2MD())
-    .pipe(gulp.dest('docs'));
+gulp.task('docs', function (done) {
+  debugger;
+  jsdoc2md.render({
+    files: [
+      './index.js',
+      './lib/typedefs.js'
+    ]
+  }).then(output => {
+    fs.writeFile('docs/API.md', output, (err) => {
+      if (err) console.err(err);
+      else done();
+    });
+  });
 });
 
-gulp.task('docs-ts-raw', function (cb) {
-  gulp.src([
+gulp.task('docs-ts-raw', function (done) {
+  return gulp.src([
     './index.js',
     './lib/typedefs.js'
   ])
@@ -92,20 +94,20 @@ gulp.task('docs-ts-raw', function (cb) {
         destination: 'index.d.ts',
         template: 'node_modules/@otris/jsdoc-tsd'
       }
-    }, cb));
+    }, done));
 });
 
 // Due to bugs in @otris/jsdoc-tsd, we need to "fix" the generated TSD.
 //
 //  * https://github.com/otris/jsdoc-tsd/issues/38
 //  * https://github.com/otris/jsdoc-tsd/issues/39
-gulp.task('docs-ts', ['docs-ts-raw'], function () {
-  gulp.src(['index.d.ts'])
+gulp.task('docs-ts', gulp.series('docs-ts-raw', function () {
+  return gulp.src(['index.d.ts'])
     .pipe($.replace('<*>', '<any>'))
     .pipe($.replace('module:path-loader~', ''))
     .pipe($.replace('module:path-loader.', ''))
     .pipe(gulp.dest('.'));
-});
+}));
 
 gulp.task('lint', function () {
   return gulp.src([
@@ -129,7 +131,7 @@ gulp.task('pre-test', function () {
     .pipe($.istanbul.hookRequire()); // Force `require` to return covered files
 });
 
-gulp.task('test-node', ['pre-test'], function () {
+gulp.task('test-node', gulp.series('pre-test', function () {
   return gulp.src([
     'test/**/test-*.js',
     '!test/browser/test-*.js',
@@ -142,9 +144,9 @@ gulp.task('test-node', ['pre-test'], function () {
     .on('end', function () {
       displayCoverageReport(!runningAllTests);
     });
-});
+}));
 
-gulp.task('test-browser', function (done) {
+gulp.task('test-browser', function () {
   var httpServer;
 
   function cleanUp () {
@@ -161,7 +163,7 @@ gulp.task('test-browser', function (done) {
     return err;
   }
 
-  Promise.resolve()
+  return Promise.resolve()
     .then(function () {
       httpServer = testHelpers.createServer(require('http')).listen(44444);
     })
@@ -179,19 +181,12 @@ gulp.task('test-browser', function (done) {
         }).start();
       });
     })
-    .then(finisher, finisher)
-    .then(done, done);
+    .then(finisher, finisher);
 });
 
-gulp.task('test', function (done) {
+gulp.task('test', gulp.series(function (done) {
   runningAllTests = true;
+  done();
+}, 'test-node', 'test-browser'));
 
-  // Done this way to ensure that test-node runs prior to test-browser.  Since both of those tasks are independent,
-  // doing this 'The Gulp Way' isn't feasible.
-  runSequence('test-node', 'test-browser', done);
-});
-
-gulp.task('default', function (done) {
-  // Done this way to run in series until we upgrade to Gulp 4.x+
-  runSequence('lint', 'test', 'dist', 'docs', 'docs-ts', done);
-});
+gulp.task('default', gulp.series('lint', 'test', 'dist', 'docs', 'docs-ts'));
