@@ -70,7 +70,6 @@ gulp.task('dist', function (done) {
 });
 
 gulp.task('docs', function (done) {
-  debugger;
   jsdoc2md.render({
     files: [
       './index.js',

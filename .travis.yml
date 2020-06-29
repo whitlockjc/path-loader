@@ -1,8 +1,5 @@
-branches:
-  only:
-    - master
 language: node_js
 node_js:
-  - "node"
-  - "6"
+  - "8"
+  - "12"
 sudo: false
