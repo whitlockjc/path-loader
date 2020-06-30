@@ -282,7 +282,7 @@ describe('path-loader (node.js loaders)', function () {
     describe('https', function () {
       it('make sure we get a loader', function (done) {
         pathLoader
-          .load('https://cdn.rawgit.com/whitlockjc/path-loader/master/package.json')
+          .load('https://rawgit.com/whitlockjc/path-loader/master/package.json')
           .then(JSON.parse)
           .then(function (json) {
             assert.equal('path-loader', json.name);
