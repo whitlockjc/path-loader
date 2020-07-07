@@ -15,13 +15,13 @@ Utility that provides a single API for loading the content of a path/URL.
 ### path-loader.load(location, [options]) ⇒ <code>Promise.&lt;\*&gt;</code>
 Loads a document at the provided location and returns a JavaScript object representation.
 
-**Kind**: static method of <code>[path-loader](#module_path-loader)</code>  
+**Kind**: static method of [<code>path-loader</code>](#module_path-loader)  
 **Returns**: <code>Promise.&lt;\*&gt;</code> - Always returns a promise even if there is a callback provided  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | location | <code>string</code> | The location to the document |
-| [options] | <code>[LoadOptions](#module_path-loader.LoadOptions)</code> | The loader options |
+| [options] | [<code>LoadOptions</code>](#module_path-loader.LoadOptions) | The loader options |
 
 **Example**  
 ```js
@@ -88,22 +88,22 @@ PathLoader
 ### path-loader.LoadOptions : <code>object</code>
 Options used when loading a path.
 
-**Kind**: static typedef of <code>[path-loader](#module_path-loader)</code>  
+**Kind**: static typedef of [<code>path-loader</code>](#module_path-loader)  
 **Properties**
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| encoding | <code>string</code> | <code>&quot;&#x27;utf-8&#x27;&quot;</code> | The encoding to use when loading the file *(File loader only)* |
-| method | <code>string</code> | <code>&quot;get&quot;</code> | The HTTP method to use for the request *(HTTP loader only)* |
-| prepareRequest | <code>[PrepareRequestCallback](#module_path-loader.PrepareRequestCallback)</code> |  | The callback used to prepare the request *(HTTP loader only)* |
-| processContent | <code>[ProcessResponseCallback](#module_path-loader.ProcessResponseCallback)</code> |  | The callback used to process the response |
+| [encoding] | <code>string</code> | <code>&quot;&#x27;utf-8&#x27;&quot;</code> | The encoding to use when loading the file *(File loader only)* |
+| [method] | <code>string</code> | <code>&quot;get&quot;</code> | The HTTP method to use for the request *(HTTP loader only)* |
+| [prepareRequest] | [<code>PrepareRequestCallback</code>](#module_path-loader.PrepareRequestCallback) |  | The callback used to prepare the request *(HTTP loader only)* |
+| [processContent] | [<code>ProcessResponseCallback</code>](#module_path-loader.ProcessResponseCallback) |  | The callback used to process the response |
 
 <a name="module_path-loader.PrepareRequestCallback"></a>
 
 ### path-loader.PrepareRequestCallback : <code>function</code>
 Callback used to provide access to altering a remote request prior to the request being made.
 
-**Kind**: static typedef of <code>[path-loader](#module_path-loader)</code>  
+**Kind**: static typedef of [<code>path-loader</code>](#module_path-loader)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -116,7 +116,7 @@ Callback used to provide access to altering a remote request prior to the reques
 ### path-loader.ProcessResponseCallback ⇒ <code>\*</code>
 Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
 
-**Kind**: static typedef of <code>[path-loader](#module_path-loader)</code>  
+**Kind**: static typedef of [<code>path-loader</code>](#module_path-loader)  
 **Returns**: <code>\*</code> - the result of processing the responses  
 
 | Param | Type | Description |
