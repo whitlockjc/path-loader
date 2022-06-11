@@ -1,5 +1,17 @@
 ## Release Notes
 
+### v1.0.11 (2022-06-11)
+
+* Moved away from PhantomJS for browser testing
+* Updated dependencies
+* Updated Node.js version to latest LTS supported _(v14.0.0)_
+
+### v1.0.10 (2019-04-01)
+
+* Updated `options.processContent` to have the location of the document being parsed _(Issue #21, Issue #24)_
+* Updated dependencies
+* Use ES2015 for browser builds
+
 ### v1.0.9 (2018-09-06)
 
 * Fix `PathLoader#load` documentation _(Issue #20)_
