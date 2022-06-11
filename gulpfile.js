@@ -31,9 +31,10 @@ var jsdoc2md = require('jsdoc-to-markdown');
 var fs = require('fs');
 var del = require('del');
 var gulp = require('gulp');
-var gutil = require('gulp-util');
-var KarmaServer = require('karma').Server;
+var log = require('fancy-log');
+var karma = require('karma');
 var path = require('path');
+var PluginError = require('plugin-error');
 var testHelpers = require('./test/helpers');
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.config');
@@ -61,8 +62,8 @@ gulp.task('clean', function () {
 
 gulp.task('dist', function (done) {
 	webpack(webpackConfig, function (err, stats) {
-		if (err) throw new gutil.PluginError('webpack', err);
-		gutil.log('[webpack]', 'Bundles generated:\n' + stats.toString('minimal').split('\n').map(function (line) {
+		if (err) throw new PluginError('webpack', err);
+		log('[webpack]', 'Bundles generated:\n' + stats.toString('minimal').split('\n').map(function (line) {
       return '  ' + line.replace('Child ', 'dist/').replace(':', '.js:');
     }).join('\n'));
 		done();
@@ -155,6 +156,11 @@ gulp.task('test-browser', function () {
   }
 
   function finisher (err) {
+    if (typeof err !== 'undefined') {
+      log('Browser tests failed');
+      log(err);
+    }
+
     cleanUp();
 
     displayCoverageReport(runningAllTests);
@@ -167,13 +173,18 @@ gulp.task('test-browser', function () {
       httpServer = testHelpers.createServer(require('http')).listen(44444);
     })
     .then(function () {
+      return karma.config.parseConfig(
+        path.join(__dirname, 'test/browser/karma.conf.js'),
+        {port: 9876},
+        {promiseConfig: true, throwErrors: true}
+      );
+    })
+    .then(function (karmaConfig) {
       return new Promise(function (resolve, reject) {
-        new KarmaServer({
-          configFile: path.join(__dirname, 'test/browser/karma.conf.js'),
-          singleRun: true
-        }, function (err) {
-          if (err) {
-            reject(err);
+        new karma.Server(karmaConfig, function (exitCode) {
+          console.log(`Karma exit code: ${exitCode}`);
+          if (exitCode !== 0) {
+            reject(new Error(`Karma exited with status code: ${exitCode}`));
           } else {
             resolve();
           }

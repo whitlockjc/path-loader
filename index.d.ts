@@ -8,7 +8,7 @@ declare module 'path-loader' {
      * @param options - The loader options
      * @returns Always returns a promise even if there is a callback provided
      */
-    export function load(location: string, options?: LoadOptions): Promise<any>;
+    export function load(location: string, options?: module:path-loader.LoadOptions): Promise<any>;
 
     /**
      * Options used when loading a path.
@@ -25,11 +25,11 @@ declare module 'path-loader' {
         /**
          * The callback used to prepare the request *(HTTP loader only)*
          */
-        prepareRequest?: PrepareRequestCallback;
+        prepareRequest?: module:path-loader.PrepareRequestCallback;
         /**
          * The callback used to process the response
          */
-        processContent?: ProcessResponseCallback;
+        processContent?: module:path-loader.ProcessResponseCallback;
     }
 
     /**

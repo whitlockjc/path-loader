@@ -33,7 +33,7 @@ var path = require('path');
 var pathLoader = require('..');
 
 var projectJson = require('./browser/project.json');
-var baseLocation = 'http://localhost:55555/';
+var baseLocation = 'http://localhost:55556/';
 var projectJsonLocation = baseLocation + 'project.json';
 
 describe('path-loader (node.js loaders)', function () {
@@ -145,7 +145,7 @@ describe('path-loader (node.js loaders)', function () {
       var server;
 
       before(function (done) {
-        server = helpers.createServer(http).listen(55555, function () {
+        server = helpers.createServer(http).listen(55556, function () {
           done();
         });
       });

@@ -40,7 +40,7 @@ describe('path-loader (browser loaders)', function () {
         pathLoader
           .load('file:///Users/not-you/projects/path-loaders/test/browser/project.json')
           .then(function () {
-            throw new Error('pathLoader.load should had failed');
+            throw new Error('pathLoader.load should have failed');
           }, function (err) {
             assert.ok(err instanceof TypeError);
             assert.equal('The \'file\' scheme is not supported in the browser', err.message);
@@ -88,10 +88,9 @@ describe('path-loader (browser loaders)', function () {
         pathLoader
           .load(baseLocation + 'missing.json')
           .then(function () {
-            throw new Error('pathLoader.load should had failed');
+            throw new Error('pathLoader.load should have failed');
           }, function (err) {
-            // superagent doesn't handle an XHR request that returns 404 very well
-            assert.ok(err.message.indexOf('Origin is not allowed by Access-Control-Allow-Origin') > -1);
+            assert.equal(err.status, 404);
           })
           .then(done, done);
       });
@@ -100,7 +99,7 @@ describe('path-loader (browser loaders)', function () {
         pathLoader
           .load('base/missing.json')
           .then(function () {
-            throw new Error('pathLoader.load should had failed');
+            throw new Error('pathLoader.load should have failed');
           }, function (err) {
             assert.equal(404, err.status);
           })
@@ -131,7 +130,7 @@ describe('path-loader (browser loaders)', function () {
               }
             })
             .then(function () {
-              throw new Error('pathLoader.load should had failed');
+              throw new Error('pathLoader.load should have failed');
             }, function (err) {
               assert.equal(err.message, expectedMessage);
             })
@@ -148,7 +147,7 @@ describe('path-loader (browser loaders)', function () {
               }
             })
             .then(function () {
-              throw new Error('pathLoader.load should had failed');
+              throw new Error('pathLoader.load should have failed');
             }, function (err) {
               assert.equal(err.message, expectedMessage);
             })
@@ -161,12 +160,12 @@ describe('path-loader (browser loaders)', function () {
           pathLoader
             .load(fileUrl)
             .then(function () {
-              throw new Error('pathLoader.load should had failed');
+              throw new Error('pathLoader.load should have failed');
             }, function (err) {
               assert.equal(401, err.status);
             })
             .then(function () {
-              return new Promise(function (resolve) {
+              return new Promise(function (resolve, reject) {
                 pathLoader.load(fileUrl, {
                   prepareRequest: function (req, callback) {
                     req.auth('whitlockjc', 'path-loader');
@@ -176,6 +175,8 @@ describe('path-loader (browser loaders)', function () {
                 })
                   .then(function (document) {
                     resolve(document);
+                  }, function (err) {
+                    reject(err);
                   });
               });
             })

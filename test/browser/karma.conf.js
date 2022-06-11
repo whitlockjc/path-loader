@@ -2,15 +2,19 @@
 
 'use strict';
 
-module.exports = function (config) {
-  console.log();
-  console.log('Browser Tests');
-  console.log();
+process.env.CHROME_BIN = require('puppeteer').executablePath()
 
+module.exports = function (config) {
   config.set({
     autoWatch: false,
     basePath: '..',
-    browsers: ['PhantomJS'],
+    browsers: ['HeadlessChrome'],
+    customLaunchers: {
+      HeadlessChrome: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-web-security']
+      }
+    },
     reporters: ['mocha'],
     singleRun: true,
     client: {
@@ -27,9 +31,9 @@ module.exports = function (config) {
     ],
     frameworks: ['mocha'],
     plugins: [
+      'karma-chrome-launcher',
       'karma-mocha',
       'karma-mocha-reporter',
-      'karma-phantomjs-launcher',
       'karma-webpack'
     ],
     preprocessors: {
