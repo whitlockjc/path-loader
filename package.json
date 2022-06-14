@@ -65,8 +65,5 @@
   "dependencies": {
     "native-promise-only": "^0.8.1",
     "superagent": "^7.1.6"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   }
 }

@@ -1,5 +1,9 @@
 ## Release Notes
 
+### v1.0.12 (2022-06-14)
+
+* Folled back the Node.js version requirement _(Issue #51)_
+
 ### v1.0.11 (2022-06-11)
 
 * Moved away from PhantomJS for browser testing
