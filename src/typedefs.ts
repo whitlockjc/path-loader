@@ -1,9 +1,12 @@
-import {SuperAgentRequest, Response} from 'superagent';
+import {SuperAgentRequest, Response as SuperAgentResponse} from 'superagent';
+
+export interface Response extends SuperAgentResponse {
+  location: string;
+}
 export interface LoadCallback  {
   (err: Error | null) : void
-  (err: Error | null, data: Buffer) : void
   (err: Error | null, data: string) : void
-  (err: Error | null, data?: string | Buffer) : void
+  (err: Error | null, data?: string) : void
 }
 
 export interface Loader {
@@ -18,7 +21,7 @@ export interface LoadOptions<T = any> {
   /**
    * The encoding to use when loading the file *(File loader only)*
    */
-  encoding?: string;
+  encoding?: BufferEncoding;
   /**
    * The HTTP method to use for the request *(HTTP loader only)*
    */
@@ -68,6 +71,7 @@ export interface RequestCallback {
   (err: Error | null, req: SuperAgentRequest): void;
   (err: Error | null, req?: SuperAgentRequest): void;
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ResponseCallback<T = any> {
   (err: Error): void;
   (err: Error | null, data: T): void;

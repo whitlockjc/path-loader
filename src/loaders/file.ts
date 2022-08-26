@@ -26,8 +26,8 @@
 import fs from 'fs';
 import path from 'path';
 import {LoadCallback, LoadOptions} from '../typedefs';
-
-
+import {isString, isUndefined} from 'lodash';
+import {ResponseError} from 'superagent';
 
 /**
  * Loads a file from the filesystem.
@@ -41,10 +41,18 @@ export function load (
   options: LoadOptions,
   callback: LoadCallback
 ) {
-  if (
-    typeof options.encoding !== 'undefined' &&
-    typeof options.encoding !== 'string'
-  ) {
+  console.log(`File Loader`);
+
+  loadAsync(location, options)
+    .then((data) => {
+      callback(null, data);
+    })
+    .catch((err: Error) => callback(err));
+}
+
+export async function loadAsync (location: string, options: LoadOptions) {
+  console.log(`File Loader Async`);
+  if (!isUndefined(options.encoding) && isString(options.encoding)) {
     throw new TypeError('options.encoding must be a string');
   }
 
@@ -55,9 +63,20 @@ export function load (
   }
 
   if (path.resolve(location) !== path.normalize(location)) {
+    console.log(`Resolve relative path ${location}`);
     // Handle relative paths
     location = path.resolve(process.cwd(), location);
   }
 
-  fs.readFile(location, {}, callback);
+  if (!fs.existsSync(location)) {
+   const err: ResponseError =  new Error('File does not exist');
+
+   err.status = 404;
+   throw err;
+  }
+
+  const data = fs.readFileSync(location, {});
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return data.toString((options.encoding ?? 'utf-8') as any);
 }

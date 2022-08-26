@@ -4,7 +4,7 @@
   "description": "Utility that provides a single API for loading the content of a path/URL.",
   "main": "index.js",
   "scripts": {
-    "test": "gulp"
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' npx mocha -r ts-node/register -f 'relative existing file (without dot)' test/test-loaders-browser.ts"
   },
   "author": {
     "name": "Jeremy Whitlock",
@@ -31,7 +31,12 @@
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
+    "@types/connect": "^3.4.35",
+    "@types/karma": "^6.3.3",
     "@types/lodash": "^4.14.184",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.7.13",
+    "@types/superagent": "^4.1.15",
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
     "basic-auth": "^2.0.0",
@@ -54,17 +59,18 @@
     "karma-chrome-launcher": "^3.1.1",
     "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
-    "karma-webpack": "^5.0.0",
+    "karma-webpack": "^4.0.2",
     "mocha": "^10.0.0",
     "plugin-error": "^2.0.0",
     "puppeteer": "^16.2.0",
     "ts-loader": "^8.1.0",
+    "ts-node": "^10.9.1",
     "webpack": "^4.46.0"
   },
   "dependencies": {
     "bluebird": "^3.7.2",
     "lodash": "^4.17.21",
     "native-promise-only": "^0.8.1",
-    "superagent": "^7.1.6"
+    "superagent": "^8.0.0"
   }
 }

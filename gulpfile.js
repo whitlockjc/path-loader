@@ -22,29 +22,22 @@
  * THE SOFTWARE.
  */
 
-/* global Promise */
-
 'use strict';
 
-var $ = require('gulp-load-plugins')();
-var jsdoc2md = require('jsdoc-to-markdown');
-var fs = require('fs');
-var del = require('del');
-var gulp = require('gulp');
-var log = require('fancy-log');
-var karma = require('karma');
-var path = require('path');
-var PluginError = require('plugin-error');
-var testHelpers = require('./test/helpers');
-var webpack = require('webpack');
-var webpackConfig = require('./webpack.config');
+const $ = require('gulp-load-plugins')();
+const jsdoc2md = require('jsdoc-to-markdown');
+const fs = require('fs');
+const del = require('del');
+const gulp = require('gulp');
+const log = require('fancy-log');
+const karma = require('karma');
+const path = require('path');
+const PluginError = require('plugin-error');
+const testHelpers = require('./test/helpers');
+const webpack = require('webpack');
+const webpackConfig = require('./webpack.config');
 
-var runningAllTests = false;
-
-// Load promises polyfill if necessary
-if (typeof Promise === 'undefined') {
-  require('native-promise-only');
-}
+let runningAllTests = false;
 
 function displayCoverageReport (display) {
   if (display) {
@@ -89,7 +82,6 @@ gulp.task('lint', function () {
       'src/**/*.ts',
       'test/**/*.ts',
       '!test/**/*.ts',
-      'gulpfile.js'
     ])
     .pipe($.eslint())
     .pipe($.eslint.format('stylish'))

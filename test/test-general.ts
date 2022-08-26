@@ -24,25 +24,33 @@
  * THE SOFTWARE.
  */
 
-'use strict';
 
-var assert = require('assert');
-var pathLoader = require('..');
+import assert from 'assert';
+import * as pathLoader from '../src/index';
 
-var pkgJsonLocation = 'https://rawgit.com/whitlockjc/path-loader/master/package.json';
-var invalidLoadScenarios = [
+const pkgJsonLocation =
+  'https://rawgit.com/whitlockjc/path-loader/master/package.json';
+const invalidLoadScenarios = [
   [[], 'location is required'],
   [[false], 'location must be a string'],
   [['someLocation', false], 'options must be an object'],
   [['git://github.com/whitlockjc/path-loader.git'], 'Unsupported scheme: git'],
   [[pkgJsonLocation, {method: false}], 'options.method must be a string'],
-  [[pkgJsonLocation, {method: 'fake'}],
-   'options.method must be one of the following: delete, get, head, patch, post or put'],
-  [[pkgJsonLocation, {prepareRequest: 'wrongType'}], 'options.prepareRequest must be a function'],
-  [[pkgJsonLocation, {processContent: 'wrongType'}], 'options.processContent must be a function']
+  [
+    [pkgJsonLocation, {method: 'fake'}],
+    'options.method must be one of the following: delete, get, head, patch, post or put',
+  ],
+  [
+    [pkgJsonLocation, {prepareRequest: 'wrongType'}],
+    'options.prepareRequest must be a function',
+  ],
+  [
+    [pkgJsonLocation, {processContent: 'wrongType'}],
+    'options.processContent must be a function',
+  ],
 ];
 
-var header = typeof window === 'undefined' ? 'node.js' : 'browser';
+const header = typeof window === 'undefined' ? 'node.js' : 'browser';
 
 function makeShouldHadFailedError (index) {
   return new Error('pathLoader.load should had failed (Test #' + index + ')');
@@ -78,20 +86,22 @@ describe('path-loader (' + header + ' general)', function () {
     });
 
     it('should return proper error for invalid arguments', function (done) {
-      var allTests = Promise.resolve();
+      let allTests = Promise.resolve();
 
       invalidLoadScenarios.forEach(function (scenario, index) {
-        allTests = allTests
-          .then(function () {
-            return new Promise(function (resolve, reject) {
-              pathLoader.load.apply(pathLoader, scenario[0])
-                .then(function () {
-                  reject(makeShouldHadFailedError(index));
-                }, function (err) {
-                  validateError(scenario[1], err, resolve, reject);
-                });
-            });
+        allTests = allTests.then(function () {
+          return new Promise(function (resolve, reject) {
+            // eslint-disable-next-line prefer-spread
+            pathLoader.load.apply(pathLoader, scenario[0]).then(
+              function () {
+                reject(makeShouldHadFailedError(index));
+              },
+              function (err) {
+                validateError(scenario[1], err, resolve, reject);
+              }
+            );
           });
+        });
       });
 
       allTests.then(done, done);
@@ -99,36 +109,42 @@ describe('path-loader (' + header + ' general)', function () {
 
     describe('options.processContent error handling', function () {
       it('thrown error', function (done) {
-        var expectedMessage = 'Thrown error';
+        const expectedMessage = 'Thrown error';
 
         pathLoader
           .load(pkgJsonLocation, {
             processContent: function () {
               throw new Error(expectedMessage);
+            },
+          })
+          .then(
+            function () {
+              throw new Error('pathLoader.load should had failed');
+            },
+            function (err) {
+              assert.equal(err.message, expectedMessage);
             }
-          })
-          .then(function () {
-            throw new Error('pathLoader.load should had failed');
-          }, function (err) {
-            assert.equal(err.message, expectedMessage);
-          })
+          )
           .then(done, done);
       });
 
       it('returned error', function (done) {
-        var expectedMessage = 'Thrown error';
+        const expectedMessage = 'Thrown error';
 
         pathLoader
           .load(pkgJsonLocation, {
             processContent: function (res, callback) {
               callback(new Error(expectedMessage));
+            },
+          })
+          .then(
+            function () {
+              throw new Error('pathLoader.load should had failed');
+            },
+            function (err) {
+              assert.equal(err.message, expectedMessage);
             }
-          })
-          .then(function () {
-            throw new Error('pathLoader.load should had failed');
-          }, function (err) {
-            assert.equal(err.message, expectedMessage);
-          })
+          )
           .then(done, done);
       });
     });

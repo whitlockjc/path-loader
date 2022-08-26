@@ -24,7 +24,7 @@
  */
 
 const unsupportedError = new TypeError(
-  "The 'file' scheme is not supported in the browser"
+  `The 'file' scheme is not supported in the browser`
 );
 
 /**
@@ -41,6 +41,7 @@ export function getBase () {
  */
 // eslint-disable-next-line
 export function load (...rest: any[]) {
+  console.log('file-browser');
   const fn = rest[rest.length - 1];
 
   if (typeof fn === 'function') {

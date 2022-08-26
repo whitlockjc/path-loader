@@ -22,30 +22,31 @@
  * THE SOFTWARE.
  */
 
-'use strict';
+import basicAuth from 'basic-auth';
+import connect from 'connect';
+import personJson from './browser/project.json';
 
-var basicAuth = require('basic-auth');
-var connect = require('connect');
-
-var app = connect();
-var personJson = require('./browser/project.json');
+const app = connect();
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Accept,Allow,Authorization,Content-Type');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Accept,Allow,Authorization,Content-Type'
+  );
   res.setHeader('Access-Control-Request-Methods', 'GET,PUT,POST,DELETE');
 
   next();
 });
 
 app.use('/secure', function (req, res, next) {
-  var user = basicAuth(req);
+  const user = basicAuth(req);
 
-  if (!user || (user.name !== 'whitlockjc' || user.pass !== 'path-loader')) {
+  if (!user || user.name !== 'whitlockjc' || user.pass !== 'path-loader') {
     res.writeHead(401, {
-      'WWW-Authenticate': 'Basic realm="path-loader Test Realm"'
+      'WWW-Authenticate': 'Basic realm="path-loader Test Realm"',
     });
 
     res.end();
@@ -69,6 +70,38 @@ app.use(function (req, res) {
   }
 });
 
-module.exports.createServer = function (transport) {
+export function createServer (transport: {createServer(app: connect.Server): http.Server}): http.Server {
   return transport.createServer(app);
-};
+}
+
+import http from 'http';
+import karma from 'karma';
+import path from 'path';
+
+export async function startKarma () {
+  const httpServer = createServer(http).listen(44444);
+
+ const karmaConfig=  await karma.config.parseConfig(
+    path.join(__dirname, './browser/karma.conf.js'),
+    {port: 9876},
+    {promiseConfig: true, throwErrors: true}
+  );
+
+  const srv: karma.Server =  new karma.Server(karmaConfig, function (exitCode) {
+    console.log(`Karma exit code: ${exitCode}`);
+  });
+
+  srv.start();
+
+  return {httpServer, srv};
+
+}
+
+export async function  stopKarma (info: {
+  httpServer: http.Server;
+  srv: karma.Server;
+}) {
+
+  await info.srv.stop();
+  info.httpServer.close();
+}
