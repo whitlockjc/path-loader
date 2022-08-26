@@ -84,36 +84,11 @@ gulp.task('docs', function (done) {
   });
 });
 
-gulp.task('docs-ts-raw', function (done) {
-  return gulp.src([
-    './index.js',
-    './lib/typedefs.js'
-  ])
-    .pipe($.jsdoc3({
-      opts: {
-        destination: 'index.d.ts',
-        template: 'node_modules/@otris/jsdoc-tsd'
-      }
-    }, done));
-});
-
-// Due to bugs in @otris/jsdoc-tsd, we need to "fix" the generated TSD.
-//
-//  * https://github.com/otris/jsdoc-tsd/issues/38
-//  * https://github.com/otris/jsdoc-tsd/issues/39
-gulp.task('docs-ts', gulp.series('docs-ts-raw', function () {
-  return gulp.src(['index.d.ts'])
-    .pipe($.replace('<*>', '<any>'))
-    .pipe($.replace('module:path-loader~', ''))
-    .pipe($.replace('module:path-loader.', ''))
-    .pipe(gulp.dest('.'));
-}));
-
 gulp.task('lint', function () {
   return gulp.src([
-      'lib/**/*.js',
-      'test/**/*.js',
-      '!test/**/*.js',
+      'src/**/*.ts',
+      'test/**/*.ts',
+      '!test/**/*.ts',
       'gulpfile.js'
     ])
     .pipe($.eslint())
@@ -123,9 +98,7 @@ gulp.task('lint', function () {
 
 gulp.task('pre-test', function () {
   return gulp.src([
-    'index.js',
-    'lib/**/*.js',
-    '!lib/loaders/file-browser.js'
+    'src/**/*.ts',
   ])
     .pipe($.istanbul({includeUntested: true}))
     .pipe($.istanbul.hookRequire()); // Force `require` to return covered files
@@ -199,4 +172,4 @@ gulp.task('test', gulp.series(function (done) {
   done();
 }, 'test-node', 'test-browser'));
 
-gulp.task('default', gulp.series('lint', 'test', 'dist', 'docs', 'docs-ts'));
+gulp.task('default', gulp.series('lint', 'test', 'dist', 'docs'));
