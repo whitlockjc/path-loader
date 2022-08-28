@@ -26,29 +26,13 @@
 
 import assert from 'assert';
 import * as pathLoader from '../src/index';
-import http from 'http';
-import karma from 'karma';
-
 import projectJson from './browser/project.json';
-import {startKarma, stopKarma} from './helpers';
+
+
 const baseLocation = 'http://localhost:44444/';
 const projectJsonLocation = baseLocation + 'project.json';
 
 describe('path-loader (browser loaders)', function () {
-
-  let testContext: {
-    httpServer: http.Server;
-    srv: karma.Server;
-  } | undefined = undefined;
-
-  before(async () => {
-    testContext = await startKarma();
-  });
-
-  after(async () => {
-    return stopKarma(testContext);
-  });
-
   describe('#load', function () {
     describe('file', function () {
       it('not implemented', function (done) {

@@ -41,7 +41,6 @@ export function load (
   options: LoadOptions,
   callback: LoadCallback
 ) {
-  console.log(`File Loader`);
 
   loadAsync(location, options)
     .then((data) => {
@@ -51,10 +50,13 @@ export function load (
 }
 
 export async function loadAsync (location: string, options: LoadOptions) {
-  console.log(`File Loader Async`);
-  if (!isUndefined(options.encoding) && isString(options.encoding)) {
-    throw new TypeError('options.encoding must be a string');
+
+  console.log('Start');
+  if (!isUndefined(options.encoding) && !isString(options.encoding)) {
+    throw new TypeError(`options.encoding must be a string`);
   }
+  console.log(`'Valid' ${options.encoding}`);
+
 
   // Strip the scheme portion of the URI
   if (location.startsWith('file://')) {
@@ -67,14 +69,7 @@ export async function loadAsync (location: string, options: LoadOptions) {
     // Handle relative paths
     location = path.resolve(process.cwd(), location);
   }
-
-  if (!fs.existsSync(location)) {
-   const err: ResponseError =  new Error('File does not exist');
-
-   err.status = 404;
-   throw err;
-  }
-
+  
   const data = fs.readFileSync(location, {});
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

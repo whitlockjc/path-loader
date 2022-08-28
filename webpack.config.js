@@ -1,55 +1,53 @@
-"use strict";
+const path = require('path');
 
-var path = require("path");
 
-module.exports = [
-  {
-    devtool: "inline-source-map",
-    entry: "./src/index.ts",
-    mode: "development",
-    module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          use: {
-            loader: "ts-loader",
-            exclude: /node_modules/,
-          },
-        },
-      ],
-    },
-    name: "path-loader",
-    optimization: {
-      minimize: false,
-    },
-    output: {
-      path: path.resolve(__dirname, "dist"),
-      filename: "path-loader.js",
-      library: "PathLoader",
-    },
+module.exports = [{
+  name: "path-loader",
+  mode: "development",
+  devtool: "inline-source-map",
+  entry: './src/index.ts',
+  target: 'node',
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+    ],
   },
-  {
-    entry: "./src/index.ts",
-    mode: "production",
-    module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          use: {
-            loader: "ts-loader",
-            exclude: /node_modules/,
-          },
-        },
-      ],
-    },
-    name: "path-loader-min",
-    optimization: {
-      minimize: true,
-    },
-    output: {
-      path: path.resolve(__dirname, "dist"),
-      filename: "path-loader-min.js",
-      library: "PathLoader",
-    },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js']
   },
-];
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'path-loader.js',
+    library: 'PathLoader',
+  },
+},
+{
+  name: "path-loader-min",
+  entry: "./src/index.ts",
+  mode: "production",
+  target: 'node',
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
+  optimization: {
+    minimize: true,
+  },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "path-loader-min.js",
+    library: "PathLoader",
+  },
+}];

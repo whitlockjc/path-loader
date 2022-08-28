@@ -82,8 +82,8 @@ export async function startKarma () {
   const httpServer = createServer(http).listen(44444);
 
  const karmaConfig=  await karma.config.parseConfig(
-    path.join(__dirname, './browser/karma.conf.js'),
-    {port: 9876},
+    path.join(__dirname, './browser/karma.conf.ts'),
+    undefined,
     {promiseConfig: true, throwErrors: true}
   );
 
@@ -102,6 +102,11 @@ export async function  stopKarma (info: {
   srv: karma.Server;
 }) {
 
-  await info.srv.stop();
-  info.httpServer.close();
+  await info.srv.on('run_complete', async function () {
+    await info.srv.stop();
+    info.httpServer.close();
+  });
+
 }
+
+

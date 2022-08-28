@@ -67,16 +67,12 @@ export function load (
   options: LoadOptions,
   callback: LoadCallback
 ) {
-  console.log(`HTTP LOADER`);
-
   loadAsync(location, options).then(
     (document) => {
-      console.log('Love');
       callback(null, document);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (err: any) => {
-      console.log(`Calling error callback`);
       callback(err);
     }
   );
@@ -89,7 +85,6 @@ function processRequest (method: Methods, location: string) {
 }
 
 export async function loadAsync (location: string, options: LoadOptions) {
-  console.log(`HTTP LOADER ASYNC`);
   const realMethod = options.method ? options.method.toLowerCase() : 'get';
 
   const err = validateOptions(options);
@@ -102,13 +97,10 @@ export async function loadAsync (location: string, options: LoadOptions) {
     realMethod === 'delete' ? 'del' : realMethod
   ) as Methods;
 
-  console.log(`Method: ${mthd}`);
-
   const realRequest = processRequest(mthd, location);
 
   try {
   if (options.prepareRequest) {
-    console.log(`prepareRequest`);
     const pr = Bluebird.promisify(options.prepareRequest);
     const d = await pr(realRequest);
 
@@ -118,7 +110,6 @@ export async function loadAsync (location: string, options: LoadOptions) {
 
     const d = await realRequest;
 
-    console.log(`returning`);
     return d.text;
   } catch (err: unknown) {
 

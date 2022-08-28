@@ -22,19 +22,15 @@
  * THE SOFTWARE.
  */
 
-// import * as FilerLoaderBrowser from './loaders/file-browser';
-import * as FilerLoader from './loaders/file';
+
 import * as HttpLoader from './loaders/http';
+import * as FilerLoader from './loaders/file';
 import Bluebird from 'bluebird';
 import {Loader, LoadOptions, Response} from './typedefs';
-import {isBuffer, isEmpty, isPlainObject, isUndefined} from 'lodash';
-import {Buffer} from 'buffer';
+import {isEmpty, isPlainObject, isUndefined} from 'lodash';
 
 type LoadModule = { load: Loader };
 
-function isABuffer (value: unknown): value is Buffer {
-  return isBuffer(value);
-}
 
 const supportedLoaders: Record<string, LoadModule> = {
   file: FilerLoader,
@@ -166,7 +162,6 @@ export async function load (
   const loader: LoadModule = getLoader(location);
   const promisifiedLoader = Bluebird.promisify(loader.load);
 
-  console.log(`Calling Loader`);
   const data: string = await promisifiedLoader(location, options);
 
 
