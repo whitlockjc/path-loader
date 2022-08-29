@@ -27,7 +27,6 @@ import fs from 'fs';
 import path from 'path';
 import {LoadCallback, LoadOptions} from '../typedefs';
 import {isString, isUndefined} from 'lodash';
-import {ResponseError} from 'superagent';
 
 /**
  * Loads a file from the filesystem.
@@ -69,7 +68,7 @@ export async function loadAsync (location: string, options: LoadOptions) {
     // Handle relative paths
     location = path.resolve(process.cwd(), location);
   }
-  
+
   const data = fs.readFileSync(location, {});
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

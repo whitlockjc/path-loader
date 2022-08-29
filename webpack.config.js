@@ -12,12 +12,17 @@ module.exports = [{
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: /(node_modules|test)/,
       },
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js']
+    extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      './loaders/file': './loaders/file-browser',
+      'process': 'process/browser'
+    },
+    fallback: {'path': false, 'os': false}
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -41,6 +46,11 @@ module.exports = [{
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      './loaders/file': './loaders/file-browser',
+      'process': 'process/browser'
+    },
+    fallback: {'path': false, 'os': false}
   },
   optimization: {
     minimize: true,

@@ -22,12 +22,15 @@
  * THE SOFTWARE.
  */
 
+export * from './typedefs';
 
 import * as HttpLoader from './loaders/http';
 import * as FilerLoader from './loaders/file';
 import Bluebird from 'bluebird';
 import {Loader, LoadOptions, Response} from './typedefs';
 import {isEmpty, isPlainObject, isUndefined} from 'lodash';
+import {Response as SuperAgentResponse} from 'superagent';
+
 
 type LoadModule = { load: Loader };
 
@@ -149,11 +152,13 @@ function validateArgs (location: string, opts: LoadOptions = {}) {
  *     console.error(err.stack);
  *   });
  */
+
+type LoaderReturn<T> = [T] extends [never] ? (string | SuperAgentResponse) : T
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function load (
+export async function load<T = never> (
   location: string,
-  options: LoadOptions<string> = {}
-): Promise<string> {
+  options: LoadOptions<LoaderReturn<T>> = {}
+): Promise<LoaderReturn<T>> {
 
   // Validate arguments
   validateArgs(location, options);
@@ -162,16 +167,15 @@ export async function load (
   const loader: LoadModule = getLoader(location);
   const promisifiedLoader = Bluebird.promisify(loader.load);
 
-  const data: string = await promisifiedLoader(location, options);
-
+  const data:  string | SuperAgentResponse = await promisifiedLoader(location, options);
 
   if (!options.processContent) {
-    return data;
+    return data as LoaderReturn<T>;
   }
   // For consistency between file and http, always send an object with a 'text' property containing the raw
   // string value being processed.
   const res: Response = isPlainObject(data)
-    ? (data as unknown as Response)
+    ? (data) as Response
     : {text: data} as unknown as Response;
 
   // Pass the path being loaded

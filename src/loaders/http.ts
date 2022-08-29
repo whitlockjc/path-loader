@@ -84,7 +84,7 @@ function processRequest (method: Methods, location: string) {
   return request[method](location);
 }
 
-export async function loadAsync (location: string, options: LoadOptions) {
+export async function loadAsync (location: string, options: LoadOptions): Promise<string> {
   const realMethod = options.method ? options.method.toLowerCase() : 'get';
 
   const err = validateOptions(options);

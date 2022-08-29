@@ -3,10 +3,10 @@ import {SuperAgentRequest, Response as SuperAgentResponse} from 'superagent';
 export interface Response extends SuperAgentResponse {
   location: string;
 }
-export interface LoadCallback  {
-  (err: Error | null) : void
-  (err: Error | null, data: string) : void
-  (err: Error | null, data?: string) : void
+export interface LoadCallback {
+  (err: Error | null): void;
+  (err: Error | null, data: string | SuperAgentResponse): void;
+  (err: Error | null, data?: string | SuperAgentResponse): void;
 }
 
 export interface Loader {

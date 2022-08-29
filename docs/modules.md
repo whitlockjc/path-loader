@@ -99,4 +99,4 @@ Always returns a promise even if there is a callback provided
 
 #### Defined in
 
-[index.ts:153](https://github.com/rkesters/path-loader/blob/a58dab1/src/index.ts#L153)
+[index.ts:153](https://github.com/rkesters/path-loader/blob/51e33db/src/index.ts#L153)
