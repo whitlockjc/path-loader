@@ -51,7 +51,7 @@ describe('path-loader (browser loaders)', function () {
     describe('http', function () {
       it('absolute existing file', function (done) {
         pathLoader
-          .load(baseLocation + 'project.json')
+          .load<string>(baseLocation + 'project.json')
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -63,7 +63,7 @@ describe('path-loader (browser loaders)', function () {
 
       it('relative existing file (without dot)', function (done) {
         pathLoader
-          .load('base/browser/project.json')
+          .load<string>('base/browser/project.json')
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -73,7 +73,7 @@ describe('path-loader (browser loaders)', function () {
 
       it('relative existing file (with dot)', function (done) {
         pathLoader
-          .load('./base/browser/project.json')
+          .load<string>('./base/browser/project.json')
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -107,7 +107,7 @@ describe('path-loader (browser loaders)', function () {
       it('make sure options.method works right', function (done) {
         // This is a convoluted test but it helps get code coverage up
         pathLoader
-          .load(baseLocation + 'project.json', {method: 'delete'})
+          .load<string>(baseLocation + 'project.json', {method: 'delete'})
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -212,7 +212,7 @@ describe('path-loader (browser loaders)', function () {
     describe('https', function () {
       it('make sure we get a loader', function () {
        return pathLoader
-          .load('https://rawgit.com/whitlockjc/path-loader/master/package.json')
+          .load<string>('https://rawgit.com/whitlockjc/path-loader/master/package.json')
           .then((r) => JSON.parse(r))
           .then(function (json) {
             assert.equal('path-loader', json.name);

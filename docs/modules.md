@@ -4,99 +4,82 @@
 
 ## Table of contents
 
+### Interfaces
+
+- [LoadCallback](interfaces/LoadCallback.md)
+- [LoadOptions](interfaces/LoadOptions.md)
+- [Loader](interfaces/Loader.md)
+- [PrepareRequestCallback](interfaces/PrepareRequestCallback.md)
+- [RequestCallback](interfaces/RequestCallback.md)
+- [Response](interfaces/Response.md)
+- [ResponseCallback](interfaces/ResponseCallback.md)
+
+### Type Aliases
+
+- [ProcessResponseCallback](modules.md#processresponsecallback)
+
 ### Functions
 
 - [load](modules.md#load)
+
+## Type Aliases
+
+### ProcessResponseCallback
+
+Ƭ **ProcessResponseCallback**<`T`\>: (`res`: [`Response`](interfaces/Response.md), `callback`: [`ResponseCallback`](interfaces/ResponseCallback.md)<`T`\>) => `void`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | `any` |
+
+#### Type declaration
+
+▸ (`res`, `callback`): `void`
+
+Callback used to provide access to processing the raw response of the request being made. *(HTTP loader only)*
+
+##### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `res` | [`Response`](interfaces/Response.md) | The Superagent response object *(For non-HTTP loaders, this object will be like the Superagent        object in that it will have a `text` property whose value is the raw string value being processed.  This was done        for consistency.  There will also be a `location` property containing the location of the path being loaded.)* |
+| `callback` | [`ResponseCallback`](interfaces/ResponseCallback.md)<`T`\> | Error-first callback |
+
+##### Returns
+
+`void`
+
+the result of processing the responses
+
+#### Defined in
+
+[src/typedefs.ts:64](https://github.com/rkesters/path-loader/blob/82c302a/src/typedefs.ts#L64)
 
 ## Functions
 
 ### load
 
-▸ **load**(`location`, `options?`): `Promise`<`string`\>
+▸ **load**<`T`\>(`location`, `options?`): `Promise`<`LoaderReturn`<`T`\>\>
 
-Loads a document at the provided location and returns a JavaScript object representation.
+#### Type parameters
 
-**`Example`**
-
-```ts
-// Example using Promises
-
-PathLoader
-  .load('./package.json')
-  .then(JSON.parse)
-  .then(function (document) {
-    console.log(document.name + ' (' + document.version + '): ' + document.description);
-  }, function (err) {
-    console.error(err.stack);
-  });
-```
-
-**`Example`**
-
-```ts
-// Example using options.prepareRequest to provide authentication details for a remotely secure URL
-
-PathLoader
-  .load('https://api.github.com/repos/whitlockjc/path-loader', {
-    prepareRequest: function (req, callback) {
-      req.auth('my-username', 'my-password');
-      callback(undefined, req);
-    }
-  })
-  .then(JSON.parse)
-  .then(function (document) {
-    console.log(document.full_name + ': ' + document.description);
-  }, function (err) {
-    console.error(err.stack);
-  });
-```
-
-**`Example`**
-
-```ts
-// Example loading a YAML file
-
-PathLoader
-  .load('/Users/not-you/projects/path-loader/.travis.yml')
-  .then(YAML.safeLoad)
-  .then(function (document) {
-    console.log('path-loader uses the', document.language, 'language.');
-  }, function (err) {
-    console.error(err.stack);
-  });
-```
-
-**`Example`**
-
-```ts
-// Example loading a YAML file with options.processContent (Useful if you need information in the raw response)
-
-PathLoader
-  .load('/Users/not-you/projects/path-loader/.travis.yml', {
-    processContent: function (res, callback) {
-      callback(YAML.safeLoad(res.text));
-    }
-  })
-  .then(function (document) {
-    console.log('path-loader uses the', document.language, 'language.');
-  }, function (err) {
-    console.error(err.stack);
-  });
-```
+| Name | Type |
+| :------ | :------ |
+| `T` | `never` |
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `location` | `string` | The location to the document |
-| `options?` | `LoadOptions`<`string`\> | The loader options |
+| Name | Type |
+| :------ | :------ |
+| `location` | `string` |
+| `options` | [`LoadOptions`](interfaces/LoadOptions.md)<`LoaderReturn`<`T`\>\> |
 
 #### Returns
 
-`Promise`<`string`\>
-
-Always returns a promise even if there is a callback provided
+`Promise`<`LoaderReturn`<`T`\>\>
 
 #### Defined in
 
-[index.ts:153](https://github.com/rkesters/path-loader/blob/51e33db/src/index.ts#L153)
+[src/index.ts:158](https://github.com/rkesters/path-loader/blob/82c302a/src/index.ts#L158)

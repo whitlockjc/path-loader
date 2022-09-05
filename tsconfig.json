@@ -5,7 +5,6 @@
     "lib": ["ES6", "DOM"],
     "sourceMap": false,
     "outDir": "./dist/node",
-    "rootDir": "./src",
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "esModuleInterop": true,
