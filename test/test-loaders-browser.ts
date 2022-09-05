@@ -24,14 +24,13 @@
  * THE SOFTWARE.
  */
 
-'use strict';
+import assert from 'assert';
+import * as pathLoader from '../src/index';
+import projectJson from './browser/project.json';
 
-var assert = require('assert');
-var pathLoader = require('..');
 
-var projectJson = require('./browser/project.json');
-var baseLocation = 'http://localhost:44444/';
-var projectJsonLocation = baseLocation + 'project.json';
+const baseLocation = 'http://localhost:44444/';
+const projectJsonLocation = baseLocation + 'project.json';
 
 describe('path-loader (browser loaders)', function () {
   describe('#load', function () {
@@ -52,7 +51,7 @@ describe('path-loader (browser loaders)', function () {
     describe('http', function () {
       it('absolute existing file', function (done) {
         pathLoader
-          .load(baseLocation + 'project.json')
+          .load<string>(baseLocation + 'project.json')
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -64,7 +63,7 @@ describe('path-loader (browser loaders)', function () {
 
       it('relative existing file (without dot)', function (done) {
         pathLoader
-          .load('base/browser/project.json')
+          .load<string>('base/browser/project.json')
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -74,7 +73,7 @@ describe('path-loader (browser loaders)', function () {
 
       it('relative existing file (with dot)', function (done) {
         pathLoader
-          .load('./base/browser/project.json')
+          .load<string>('./base/browser/project.json')
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -84,15 +83,14 @@ describe('path-loader (browser loaders)', function () {
           .then(done, done);
       });
 
-      it('missing file (different origin)', function (done) {
-        pathLoader
+      it('missing file (different origin)', function () {
+        return pathLoader
           .load(baseLocation + 'missing.json')
           .then(function () {
             throw new Error('pathLoader.load should have failed');
           }, function (err) {
             assert.equal(err.status, 404);
-          })
-          .then(done, done);
+          });
       });
 
       it('missing file (same origin)', function (done) {
@@ -109,7 +107,7 @@ describe('path-loader (browser loaders)', function () {
       it('make sure options.method works right', function (done) {
         // This is a convoluted test but it helps get code coverage up
         pathLoader
-          .load(baseLocation + 'project.json', {method: 'delete'})
+          .load<string>(baseLocation + 'project.json', {method: 'delete'})
           .then(JSON.parse)
           .then(function (json) {
             assert.deepEqual(projectJson, json);
@@ -121,7 +119,7 @@ describe('path-loader (browser loaders)', function () {
 
       describe('should support options.prepareRequest', function () {
         it('thrown error', function (done) {
-          var expectedMessage = 'Thrown error';
+          const expectedMessage = 'Thrown error';
 
           pathLoader
             .load(projectJsonLocation, {
@@ -138,7 +136,7 @@ describe('path-loader (browser loaders)', function () {
         });
 
         it('returned error', function (done) {
-          var expectedMessage = 'Thrown error';
+          const expectedMessage = 'Thrown error';
 
           pathLoader
             .load(projectJsonLocation, {
@@ -155,7 +153,7 @@ describe('path-loader (browser loaders)', function () {
         });
 
         it('valid callback', function (done) {
-          var fileUrl = baseLocation + 'secure/project.json';
+          const fileUrl = baseLocation + 'secure/project.json';
 
           pathLoader
             .load(fileUrl)
@@ -180,7 +178,8 @@ describe('path-loader (browser loaders)', function () {
                   });
               });
             })
-            .then(JSON.parse)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .then((d) => JSON.parse(d as any))
             .then(function (document) {
               assert.deepEqual(projectJson, document);
             }, function (err) {
@@ -197,7 +196,7 @@ describe('path-loader (browser loaders)', function () {
             processContent: function (res, callback) {
               assert.equal(res.location, baseLocation + 'project.json');
 
-              callback(undefined, JSON.parse(res.text));
+              callback(null, JSON.parse(res.text));
             }
           })
           .then(function (json) {
@@ -211,14 +210,14 @@ describe('path-loader (browser loaders)', function () {
 
     // Since http and https have the same implementation, no need to test them individually
     describe('https', function () {
-      it('make sure we get a loader', function (done) {
-        pathLoader
-          .load('https://rawgit.com/whitlockjc/path-loader/master/package.json')
-          .then(JSON.parse)
+      it('make sure we get a loader', function () {
+       return pathLoader
+          .load<string>('https://rawgit.com/whitlockjc/path-loader/master/package.json')
+          .then((r) => JSON.parse(r))
           .then(function (json) {
             assert.equal('path-loader', json.name);
-          })
-          .then(done, done);
+          });
+
       });
     });
   });

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "lib": ["ES6", "DOM"],
+    "sourceMap": false,
+    "outDir": "./dist/node",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": ["mocha", "node"]
+  },
+  "exclude": ["node_modules", "test/"],
+  "include": ["./src/**/*.ts"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}

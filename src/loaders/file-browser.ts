@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 Jeremy Whitlock
+ * Copyright (c) 2022 Robert Kesterson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +23,29 @@
  * THE SOFTWARE.
  */
 
-'use strict';
-
-var unsupportedError = new TypeError('The \'file\' scheme is not supported in the browser');
+const unsupportedError = new TypeError(
+  `The 'file' scheme is not supported in the browser`
+);
 
 /**
  * The file loader is not supported in the browser.
  *
  * @throws {error} the file loader is not supported in the browser
  */
-module.exports.getBase = function () {
+export function getBase () {
   throw unsupportedError;
-};
+}
 
 /**
  * The file loader is not supported in the browser.
  */
-module.exports.load = function () {
-  var fn = arguments[arguments.length - 1];
+// eslint-disable-next-line
+export function load (...rest: any[]) {
+  const fn = rest[rest.length - 1];
 
   if (typeof fn === 'function') {
     fn(unsupportedError);
   } else {
     throw unsupportedError;
   }
-};
+}

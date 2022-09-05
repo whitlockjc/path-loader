@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 Jeremy Whitlock
+ * Copyright (c) 2022 Robert Kesterson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +23,54 @@
  * THE SOFTWARE.
  */
 
-'use strict';
-
-var fs = require('fs');
-var path = require('path');
+import fs from 'fs';
+import path from 'path';
+import {LoadCallback, LoadOptions} from '../typedefs';
+import {isString, isUndefined} from 'lodash';
 
 /**
  * Loads a file from the filesystem.
  *
- * @param {string} location - The filesystem location (If relative, location is relative to process.cwd()).
- * @param {object} options - The loader options (Unused)
- * @param {string} [options.encoding='utf-8'] - The encoding to use when loading the file
- * @param {function} callback - The error-first callback
+ * @param location - The filesystem location (If relative, location is relative to process.cwd()).
+ * @param options - The loader options (Unused)
+ * @param callback - The error-first callback
  */
-module.exports.load = function (location, options, callback) {
-  if (typeof options.encoding !== 'undefined' && typeof options.encoding !== 'string') {
-    throw new TypeError('options.encoding must be a string');    
+export function load (
+  location: string,
+  options: LoadOptions,
+  callback: LoadCallback
+) {
+
+  loadAsync(location, options)
+    .then((data) => {
+      callback(null, data);
+    })
+    .catch((err: Error) => callback(err));
+}
+
+export async function loadAsync (location: string, options: LoadOptions) {
+
+  console.log('Start');
+  if (!isUndefined(options.encoding) && !isString(options.encoding)) {
+    throw new TypeError(`options.encoding must be a string`);
   }
+  console.log(`'Valid' ${options.encoding}`);
+
 
   // Strip the scheme portion of the URI
-  if (location.indexOf('file://') === 0) {
+  if (location.startsWith('file://')) {
     // Handle URI
-    location = location.substr(7);
+    location = location.substring(7);
   }
 
   if (path.resolve(location) !== path.normalize(location)) {
+    console.log(`Resolve relative path ${location}`);
     // Handle relative paths
     location = path.resolve(process.cwd(), location);
   }
 
-  fs.readFile(location, {encoding: options.encoding || 'utf-8'}, callback);
-};
+  const data = fs.readFileSync(location, {});
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return data.toString((options.encoding ?? 'utf-8') as any);
+}

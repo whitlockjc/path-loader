@@ -1,56 +1,63 @@
-'use strict';
+const path = require('path');
 
-var path = require('path');
 
 module.exports = [{
-  devtool: 'inline-source-map',
-  entry: './index.js',
-  mode: 'development',
+  name: "path-loader",
+  mode: "development",
+  devtool: "inline-source-map",
+  entry: './src/index.ts',
+  target: 'node',
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['es2015']
-          }
-        }
-      }
-    ]
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /(node_modules|test)/,
+      },
+    ],
   },
-  name: 'path-loader',
-  optimization: {
-    minimize: false
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      './loaders/file': './loaders/file-browser',
+      'process': 'process/browser'
+    },
+    fallback: {'path': false, 'os': false}
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'path-loader.js',
-    library: 'PathLoader'
-  }
-}, {
-  entry: './index.js',
-  mode: 'production',
+    library: 'PathLoader',
+  },
+},
+{
+  name: "path-loader-min",
+  entry: "./src/index.ts",
+  mode: "production",
+  target: 'node',
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['es2015']
-          }
-        }
-      }
-    ]
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      },
+    ],
   },
-  name: 'path-loader-min',
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      './loaders/file': './loaders/file-browser',
+      'process': 'process/browser'
+    },
+    fallback: {'path': false, 'os': false}
+  },
   optimization: {
-    minimize: true
+    minimize: true,
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'path-loader-min.js',
-    library: 'PathLoader'
-  }
+    path: path.resolve(__dirname, "dist"),
+    filename: "path-loader-min.js",
+    library: "PathLoader",
+  },
 }];

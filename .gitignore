@@ -5,3 +5,6 @@ bower_components/
 coverage/
 .tern-project
 .DS_Store
+.vscode/
+dist/
+.coverage/

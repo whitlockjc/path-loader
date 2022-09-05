@@ -30,7 +30,7 @@ var assert = require('assert');
 var helpers = require('./helpers');
 var http = require('http');
 var path = require('path');
-var pathLoader = require('..');
+var pathLoader = require('../src');
 
 var projectJson = require('./browser/project.json');
 var baseLocation = 'http://localhost:55556/';
