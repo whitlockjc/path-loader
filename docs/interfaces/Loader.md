@@ -22,4 +22,4 @@
 
 #### Defined in
 
-[src/typedefs.ts:13](https://github.com/rkesters/path-loader/blob/82c302a/src/typedefs.ts#L13)
+[src/typedefs.ts:13](https://github.com/rkesters/path-loader/blob/621d5a0/src/typedefs.ts#L13)

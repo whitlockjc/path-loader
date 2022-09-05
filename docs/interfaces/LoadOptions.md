@@ -29,7 +29,7 @@ The encoding to use when loading the file *(File loader only)*
 
 #### Defined in
 
-[src/typedefs.ts:24](https://github.com/rkesters/path-loader/blob/82c302a/src/typedefs.ts#L24)
+[src/typedefs.ts:24](https://github.com/rkesters/path-loader/blob/621d5a0/src/typedefs.ts#L24)
 
 ___
 
@@ -41,7 +41,7 @@ The HTTP method to use for the request *(HTTP loader only)*
 
 #### Defined in
 
-[src/typedefs.ts:28](https://github.com/rkesters/path-loader/blob/82c302a/src/typedefs.ts#L28)
+[src/typedefs.ts:28](https://github.com/rkesters/path-loader/blob/621d5a0/src/typedefs.ts#L28)
 
 ___
 
@@ -53,7 +53,7 @@ The callback used to prepare the request *(HTTP loader only)*
 
 #### Defined in
 
-[src/typedefs.ts:32](https://github.com/rkesters/path-loader/blob/82c302a/src/typedefs.ts#L32)
+[src/typedefs.ts:32](https://github.com/rkesters/path-loader/blob/621d5a0/src/typedefs.ts#L32)
 
 ___
 
@@ -65,4 +65,4 @@ The callback used to process the response
 
 #### Defined in
 
-[src/typedefs.ts:36](https://github.com/rkesters/path-loader/blob/82c302a/src/typedefs.ts#L36)
+[src/typedefs.ts:36](https://github.com/rkesters/path-loader/blob/621d5a0/src/typedefs.ts#L36)

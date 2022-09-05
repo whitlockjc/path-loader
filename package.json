@@ -15,7 +15,6 @@
     "test": "npm run test:browser && npm run test:node",
     "posttest": "npm run coverage:merge && npm run coverage:report && npm run coverage:cli && npx rimraf .nyc_output",
     "lint": "npx eslint --quiet --fix ./test/**/*.ts && npx eslint --quiet --fix ./src/**/*.ts",
-    "prebuild": "npm run lint && npm test",
     "build": "npm run buildOnly",
     "prebuildOnly": "npm run clean",
     "buildOnly": "npx webpack && npx tsc",

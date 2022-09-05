@@ -23,7 +23,7 @@ Callback used to provide access to altering a remote request prior to the reques
 
 #### Defined in
 
-[src/typedefs.ts:46](https://github.com/rkesters/path-loader/blob/82c302a/src/typedefs.ts#L46)
+[src/typedefs.ts:46](https://github.com/rkesters/path-loader/blob/621d5a0/src/typedefs.ts#L46)
 
 ### PrepareRequestCallback
 
@@ -45,7 +45,7 @@ Callback used to provide access to altering a remote request prior to the reques
 
 #### Defined in
 
-[src/typedefs.ts:47](https://github.com/rkesters/path-loader/blob/82c302a/src/typedefs.ts#L47)
+[src/typedefs.ts:47](https://github.com/rkesters/path-loader/blob/621d5a0/src/typedefs.ts#L47)
 
 ### PrepareRequestCallback
 
@@ -67,4 +67,4 @@ Callback used to provide access to altering a remote request prior to the reques
 
 #### Defined in
 
-[src/typedefs.ts:48](https://github.com/rkesters/path-loader/blob/82c302a/src/typedefs.ts#L48)
+[src/typedefs.ts:48](https://github.com/rkesters/path-loader/blob/621d5a0/src/typedefs.ts#L48)
