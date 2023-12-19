@@ -64,6 +64,6 @@
   },
   "dependencies": {
     "native-promise-only": "^0.8.1",
-    "superagent": "^7.1.6"
+    "superagent": "^8.0.0"
   }
 }
